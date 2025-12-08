@@ -3,6 +3,7 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 import { createTeam } from "../controllers/team.controller.js";
 import { getMyTeams } from "../controllers/team.controller.js";
 import { generateInviteLink } from "../controllers/team.controller.js";
+import { joinTeam } from "../controllers/team.controller.js";
 
 const router = Router();
 
@@ -13,5 +14,7 @@ router.post("/create", authMiddleware, createTeam);
 router.get("/my", authMiddleware, getMyTeams);
 
 router.post("/:teamId/invite", authMiddleware, generateInviteLink);
+
+router.post("/join", authMiddleware, joinTeam);
 
 export default router;
