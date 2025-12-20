@@ -5,9 +5,7 @@ import { getMyTeams } from '../controllers/team.controller.js';
 import { generateInviteLink } from '../controllers/team.controller.js';
 import { joinTeam } from '../controllers/team.controller.js';
 import { isTeamAdmin, isTeamMember } from '../middleware/team.middleware.js';
-import channelRoutes from "./channel.routes.js";
-
-
+import channelRoutes from './channel.routes.js';
 const router = Router();
 
 // POST /api/teams/create
