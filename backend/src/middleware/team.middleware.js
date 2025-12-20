@@ -1,4 +1,4 @@
-import TeamMember from "../models/TeamMember.js";
+import TeamMember from '../models/TeamMember.js';
 
 /**
  * Check if user is part of the team
@@ -10,22 +10,23 @@ export const isTeamMember = async (req, res, next) => {
     const userId = req.userId;
 
     if (!teamId) {
-      return res.status(400).json({ message: "Team ID is required." });
+      return res.status(400).json({ message: 'Team ID is required.' });
     }
 
     const membership = await TeamMember.findOne({ teamId, userId });
 
     if (!membership) {
-      return res.status(403).json({ message: "You are not a member of this team." });
+      return res
+        .status(403)
+        .json({ message: 'You are not a member of this team.' });
     }
 
     req.teamRole = membership.role; // store role for next middleware
 
     next();
-
   } catch (err) {
-    console.error("Team member check error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Team member check error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -34,8 +35,8 @@ export const isTeamMember = async (req, res, next) => {
  * Must be used AFTER isTeamMember
  */
 export const isTeamAdmin = (req, res, next) => {
-  if (req.teamRole !== "admin") {
-    return res.status(403).json({ message: "Admin access required." });
+  if (req.teamRole !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required.' });
   }
 
   next();

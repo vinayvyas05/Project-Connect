@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const { Schema, model } = mongoose;
 
@@ -13,7 +13,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
 
     email: {
@@ -22,17 +22,17 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true
+      index: true,
     },
 
     password: {
       type: String,
       required: true,
-      minlength: 8
-    }
+      minlength: 8,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
@@ -40,9 +40,9 @@ const userSchema = new Schema(
  * Pre-save hook
  * - hashes password before saving when password field is created/modified
  */
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   // `this` is the document being saved
-  if (!this.isModified("password")) return next();
+  if (!this.isModified('password')) return next();
 
   const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
   try {
@@ -74,4 +74,4 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
-export default model("User", userSchema);
+export default model('User', userSchema);

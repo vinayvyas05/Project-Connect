@@ -1,7 +1,6 @@
-import Team from "../models/Team.js";
-import TeamMember from "../models/TeamMember.js";
-import jwt from "jsonwebtoken";
-
+import Team from '../models/Team.js';
+import TeamMember from '../models/TeamMember.js';
+import jwt from 'jsonwebtoken';
 
 /**
  * CREATE TEAM (Workspace)
@@ -14,30 +13,29 @@ export const createTeam = async (req, res) => {
 
     // 1. Validate input
     if (!name) {
-      return res.status(400).json({ message: "Team name is required." });
+      return res.status(400).json({ message: 'Team name is required.' });
     }
 
     // 2. Create Team
     const team = await Team.create({
       name,
-      ownerId: userId
+      ownerId: userId,
     });
 
     // 3. Add creator as ADMIN in TeamMember
     await TeamMember.create({
       teamId: team._id,
       userId,
-      role: "admin"
+      role: 'admin',
     });
 
     return res.status(201).json({
-      message: "Team created successfully.",
-      team
+      message: 'Team created successfully.',
+      team,
     });
-
   } catch (err) {
-    console.error("Create team error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Create team error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -46,21 +44,20 @@ export const getMyTeams = async (req, res) => {
     const userId = req.userId;
 
     // 1. Find all teams user is part of
-    const memberships = await TeamMember.find({ userId }).select("teamId");
+    const memberships = await TeamMember.find({ userId }).select('teamId');
 
-    const teamIds = memberships.map(m => m.teamId);
+    const teamIds = memberships.map((m) => m.teamId);
 
     // 2. Get full team details
     const teams = await Team.find({ _id: { $in: teamIds } });
 
     return res.status(200).json({
-      message: "Teams fetched successfully.",
-      teams
+      message: 'Teams fetched successfully.',
+      teams,
     });
-
   } catch (err) {
-    console.error("Fetch my teams error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Fetch my teams error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -73,22 +70,26 @@ export const generateInviteLink = async (req, res) => {
     const membership = await TeamMember.findOne({ teamId, userId });
 
     if (!membership) {
-      return res.status(403).json({ message: "You are not part of this team." });
+      return res
+        .status(403)
+        .json({ message: 'You are not part of this team.' });
     }
 
-    if (membership.role !== "admin") {
-      return res.status(403).json({ message: "Only admins can generate invite links." });
+    if (membership.role !== 'admin') {
+      return res
+        .status(403)
+        .json({ message: 'Only admins can generate invite links.' });
     }
 
     // 2. Create JWT invite token
     const inviteToken = jwt.sign(
       {
         teamId,
-        invitedBy: userId
+        invitedBy: userId,
       },
-      process.env.INVITE_TOKEN_SECRET || "default_invite_secret",
+      process.env.INVITE_TOKEN_SECRET || 'default_invite_secret',
       {
-        expiresIn: process.env.INVITE_TOKEN_EXPIRES_IN || "7d"
+        expiresIn: process.env.INVITE_TOKEN_EXPIRES_IN || '7d',
       }
     );
 
@@ -96,14 +97,13 @@ export const generateInviteLink = async (req, res) => {
     const inviteLink = `${process.env.FRONTEND_URL}/join/${inviteToken}`;
 
     return res.status(200).json({
-      message: "Invite link generated.",
+      message: 'Invite link generated.',
       inviteLink,
-      token: inviteToken
+      token: inviteToken,
     });
-
   } catch (err) {
-    console.error("Invite link error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Invite link error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -113,11 +113,11 @@ export const generateInviteLink = async (req, res) => {
  */
 export const joinTeam = async (req, res) => {
   try {
-    const { token } = req.body;     
-    const userId = req.userId;      
+    const { token } = req.body;
+    const userId = req.userId;
 
     if (!token) {
-      return res.status(400).json({ message: "Invite token is required." });
+      return res.status(400).json({ message: 'Invite token is required.' });
     }
 
     // 1. Verify invite token
@@ -125,10 +125,12 @@ export const joinTeam = async (req, res) => {
     try {
       decoded = jwt.verify(
         token,
-        process.env.INVITE_TOKEN_SECRET || "default_invite_secret"
+        process.env.INVITE_TOKEN_SECRET || 'default_invite_secret'
       );
     } catch (err) {
-      return res.status(400).json({ message: "Invalid or expired invite token." });
+      return res
+        .status(400)
+        .json({ message: 'Invalid or expired invite token.' });
     }
 
     const { teamId } = decoded;
@@ -136,15 +138,15 @@ export const joinTeam = async (req, res) => {
     // 2. Check if team exists
     const team = await Team.findById(teamId);
     if (!team) {
-      return res.status(404).json({ message: "Team not found." });
+      return res.status(404).json({ message: 'Team not found.' });
     }
 
     // 3. Check if user is already a member
     const existingMember = await TeamMember.findOne({ teamId, userId });
     if (existingMember) {
       return res.status(200).json({
-        message: "You are already a member of this team.",
-        team
+        message: 'You are already a member of this team.',
+        team,
       });
     }
 
@@ -152,16 +154,15 @@ export const joinTeam = async (req, res) => {
     await TeamMember.create({
       teamId,
       userId,
-      role: "member"
+      role: 'member',
     });
 
     return res.status(200).json({
-      message: "Joined team successfully!",
-      team
+      message: 'Joined team successfully!',
+      team,
     });
-
   } catch (err) {
-    console.error("Join team error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Join team error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
