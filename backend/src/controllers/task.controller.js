@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import TeamMember from "../models/TeamMember.js";
+import { notifyTask } from "../utils/taskNotifier.js";
 
 /**
  * CREATE TASK
@@ -13,6 +14,20 @@ export const createTask = async (req, res) => {
       return res.status(400).json({ message: "Title is required" });
     }
 
+    // if assignedTo exists, ensure user is team member
+    if (assignedTo) {
+      const isMember = await TeamMember.findOne({
+        teamId,
+        userId: assignedTo,
+      });
+
+      if (!isMember) {
+        return res
+          .status(400)
+          .json({ message: "Assigned user is not a team member" });
+      }
+    }
+
     const task = await Task.create({
       teamId,
       title,
@@ -21,6 +36,8 @@ export const createTask = async (req, res) => {
       dueDate,
       createdBy: req.user.id,
     });
+
+    await notifyTask(teamId, `📝 Task created: ${task.title}`);
 
     res.status(201).json(task);
   } catch (error) {
@@ -67,13 +84,42 @@ export const updateTask = async (req, res) => {
       return res.status(403).json({ message: "Not allowed" });
     }
 
+    // check assigned user membership
+    if (assignedTo) {
+      const isMember = await TeamMember.findOne({
+        teamId,
+        userId: assignedTo,
+      });
+
+      if (!isMember) {
+        return res
+          .status(400)
+          .json({ message: "Assigned user is not a team member" });
+      }
+    }
+
+    let sendUpdateNotification = true;
+
     if (title !== undefined) task.title = title;
     if (description !== undefined) task.description = description;
-    if (status !== undefined) task.status = status;
+
+    if (status !== undefined) {
+      task.status = status;
+
+      if (status === "done") {
+        await notifyTask(teamId, `✅ Task completed: ${task.title}`);
+        sendUpdateNotification = false;
+      }
+    }
+
     if (assignedTo !== undefined) task.assignedTo = assignedTo;
     if (dueDate !== undefined) task.dueDate = dueDate;
 
     await task.save();
+
+    if (sendUpdateNotification) {
+      await notifyTask(teamId, `✏️ Task updated: ${task.title}`);
+    }
 
     res.json(task);
   } catch (error) {
@@ -98,6 +144,8 @@ export const deleteTask = async (req, res) => {
     if (task.createdBy.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not allowed" });
     }
+
+    await notifyTask(teamId, `🗑️ Task deleted: ${task.title}`);
 
     await task.deleteOne();
 
