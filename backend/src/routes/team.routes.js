@@ -6,6 +6,8 @@ import { generateInviteLink } from '../controllers/team.controller.js';
 import { joinTeam } from '../controllers/team.controller.js';
 import { isTeamAdmin, isTeamMember } from '../middleware/team.middleware.js';
 import channelRoutes from './channel.routes.js';
+import taskRoutes from './task.routes.js';
+
 const router = Router();
 
 // POST /api/teams/create
@@ -24,7 +26,9 @@ router.post(
 
 router.post('/join', authMiddleware, joinTeam);
 
-router.use("/:teamId/channels", channelRoutes);
+router.use('/:teamId/channels', channelRoutes);
 
+// inside router
+router.use('/:teamId/tasks', taskRoutes);
 
 export default router;
