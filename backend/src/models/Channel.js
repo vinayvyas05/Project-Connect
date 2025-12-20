@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
-const channelSchema = new schema(
+const channelSchema = new Schema(
   {
     name: {
       type: String,
