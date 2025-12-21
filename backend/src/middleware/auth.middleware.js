@@ -1,32 +1,31 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
 
-export async function socketAuth(socket, next) {
+/**
+ * REST API Authentication Middleware
+ */
+export const authMiddleware = (req, res, next) => {
   try {
-    const token = socket.handshake.auth.token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      return next(new Error('No token provided'));
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
     }
 
+    const token = authHeader.split(' ')[1];
+    
+    // Verify the token using the secret from your .env
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // FIX: Use decoded.userId to match your auth.controller.js payload
-    const user = await User.findById(decoded.userId).select('_id email name');
-
-    if (!user) {
-      return next(new Error('User not found'));
-    }
-
-    socket.user = {
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-    };
+    // FIX: Standardize to req.user object to match your controllers
+    // Use decoded.userId because that is what your login controller saves
+    req.user = { id: decoded.userId }; 
+    
+    // Also keep req.userId if your existing routes (like /profile) specifically need it
+    req.userId = decoded.userId;
 
     next();
   } catch (err) {
-    console.error("Socket Auth Error:", err.message);
-    next(new Error('Unauthorized'));
+    console.error('Auth Middleware Error:', err.message);
+    return res.status(401).json({ message: 'Unauthorized' });
   }
-}
+};
