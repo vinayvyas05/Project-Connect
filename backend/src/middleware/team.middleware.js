@@ -7,8 +7,8 @@ import TeamMember from '../models/TeamMember.js';
 export const isTeamMember = async (req, res, next) => {
   try {
     const { teamId } = req.params;
-    const userId = req.userId;
-
+    const userId = req.user.id;
+    
     if (!teamId) {
       return res.status(400).json({ message: 'Team ID is required.' });
     }

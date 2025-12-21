@@ -163,6 +163,23 @@ export const joinTeam = async (req, res) => {
     });
   } catch (err) {
     console.error('Join team error:', err);
-    return res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// Get team members
+export const getTeamMembers = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+
+    // Fetch members
+    const members = await TeamMember.find({ teamId }).populate(
+      'userId',
+      'name email'
+    );
+
+    res.status(200).json(members);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
   }
 };

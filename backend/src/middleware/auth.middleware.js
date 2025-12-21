@@ -1,24 +1,32 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-export const authMiddleware = (req, res, next) => {
+export async function socketAuth(socket, next) {
   try {
-    // Read token
-    const authHeader = req.headers.authorization;
+    const token = socket.handshake.auth.token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'No token provided.' });
+    if (!token) {
+      return next(new Error('No token provided'));
     }
 
-    const token = authHeader.split(' ')[1];
-
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach userId to request
-    req.userId = decoded.userId;
+    // FIX: Use decoded.userId to match your auth.controller.js payload
+    const user = await User.findById(decoded.userId).select('_id email name');
+
+    if (!user) {
+      return next(new Error('User not found'));
+    }
+
+    socket.user = {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+    };
 
     next();
   } catch (err) {
-    return res.status(401).json({ message: 'Invalid or expired token.' });
+    console.error("Socket Auth Error:", err.message);
+    next(new Error('Unauthorized'));
   }
-};
+}

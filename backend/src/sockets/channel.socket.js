@@ -1,10 +1,10 @@
-import TeamMember from "../models/TeamMember.js";
-import Channel from "../models/Channel.js";
-import Message from "../models/Message.js";
+import TeamMember from '../models/TeamMember.js';
+import Channel from '../models/Channel.js';
+import Message from '../models/Message.js';
 
 export function channelSocket(io, socket) {
   // JOIN CHANNEL
-  socket.on("channel:join", async ({ teamId, channelId }) => {
+  socket.on('channel:join', async ({ teamId, channelId }) => {
     try {
       const isMember = await TeamMember.findOne({
         teamId,
@@ -15,21 +15,21 @@ export function channelSocket(io, socket) {
 
       socket.join(`channel:${channelId}`);
     } catch (err) {
-      console.error("channel:join error:", err.message);
+      console.error('channel:join error:', err.message);
     }
   });
 
   // LEAVE CHANNEL
-  socket.on("channel:leave", ({ channelId }) => {
+  socket.on('channel:leave', ({ channelId }) => {
     try {
       socket.leave(`channel:${channelId}`);
     } catch (err) {
-      console.error("channel:leave error:", err.message);
+      console.error('channel:leave error:', err.message);
     }
   });
 
   // SEND MESSAGE
-  socket.on("message:send", async ({ teamId, channelId, text }) => {
+  socket.on('message:send', async ({ teamId, channelId, text }) => {
     try {
       if (!text) return;
 
@@ -58,16 +58,20 @@ export function channelSocket(io, socket) {
       });
 
       // emit to channel
-      io.to(`channel:${channelId}`).emit("message:new", {
+      io.to(`channel:${channelId}`).emit('message:new', {
         _id: message._id,
         teamId,
         channelId,
-        senderId: socket.user.id,
+        senderId: {
+          _id: socket.user.id,
+          name: socket.user.name,
+          email: socket.user.email,
+        },
         text: message.text,
         createdAt: message.createdAt,
       });
     } catch (err) {
-      console.error("message:send error:", err.message);
+      console.error('message:send error:', err.message);
     }
   });
 }

@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth.middleware.js';
-import { createTeam } from '../controllers/team.controller.js';
-import { getMyTeams } from '../controllers/team.controller.js';
-import { generateInviteLink } from '../controllers/team.controller.js';
-import { joinTeam } from '../controllers/team.controller.js';
+import {
+  createTeam,
+  getMyTeams,
+  generateInviteLink,
+  joinTeam,
+  getTeamMembers,
+} from '../controllers/team.controller.js';
 import { isTeamAdmin, isTeamMember } from '../middleware/team.middleware.js';
 import channelRoutes from './channel.routes.js';
 import taskRoutes from './task.routes.js';
@@ -25,6 +28,9 @@ router.post(
 );
 
 router.post('/join', authMiddleware, joinTeam);
+
+// GET /api/teams/:teamId/members
+router.get('/:teamId/members', authMiddleware, isTeamMember, getTeamMembers);
 
 router.use('/:teamId/channels', channelRoutes);
 

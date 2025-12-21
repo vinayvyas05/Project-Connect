@@ -10,12 +10,14 @@ const PORT = process.env.PORT || 5000;
 
 connectDB();
 
-// create http server
+// 1. Create the HTTP server using the Express app
 const server = http.createServer(app);
 
-// initialize socket.io
+// 2. Initialize socket.io and attach it to THIS specific server
 initSocket(server);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// 3. CRITICAL: Use server.listen, NOT app.listen
+// This starts both Express (REST) and Socket.io on the same port
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
