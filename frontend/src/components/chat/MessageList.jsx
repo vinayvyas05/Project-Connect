@@ -105,6 +105,10 @@ function MessageBubble({ message, isOwn, showHeader }) {
 }
 
 // ─── MessageList ──────────────────────────────────────────────────────────────
+
+// Break message group after 5 minutes even if same sender
+const GROUP_GAP_MS = 5 * 60 * 1000;
+
 export default function MessageList({ messages, loading, error }) {
   const { user } = useAuth();
   const bottomRef = useRef(null);
@@ -154,21 +158,33 @@ export default function MessageList({ messages, loading, error }) {
     );
   }
 
-  // Group by date and collapse consecutive messages from the same sender
+  // Group consecutive messages from the same sender IF within GROUP_GAP_MS
   let lastDate = null;
   let lastSenderId = null;
+  let lastCreatedAt = null; // track the timestamp of the previous message
 
   return (
     <div className="flex-1 overflow-y-auto py-4">
       {messages.map((msg, i) => {
         const dateLabel = formatDate(msg.createdAt);
         const showDate = dateLabel !== lastDate;
+
         const senderId = msg.senderId?._id ?? msg.senderId;
-        const showHeader = showDate || senderId !== lastSenderId;
+
+        // Time gap since the previous message from this sender
+        const msgTime = new Date(msg.createdAt).getTime();
+        const timeGapTooLarge =
+          lastCreatedAt !== null && msgTime - lastCreatedAt > GROUP_GAP_MS;
+
+        // Show header when: date changes, sender changes, OR time gap > 5 min
+        const showHeader =
+          showDate || senderId !== lastSenderId || timeGapTooLarge;
+
         const isOwn = senderId === user?._id;
 
         if (showDate) lastDate = dateLabel;
         lastSenderId = senderId;
+        lastCreatedAt = msgTime;
 
         return (
           <div key={msg._id ?? i}>
