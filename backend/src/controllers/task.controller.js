@@ -1,6 +1,6 @@
-import Task from "../models/Task.js";
-import TeamMember from "../models/TeamMember.js";
-import { notifyTask } from "../utils/taskNotifier.js";
+import Task from '../models/Task.js';
+import TeamMember from '../models/TeamMember.js';
+import { notifyTask } from '../utils/taskNotifier.js';
 
 /**
  * CREATE TASK
@@ -11,7 +11,7 @@ export const createTask = async (req, res) => {
     const { title, description, assignedTo, dueDate } = req.body;
 
     if (!title) {
-      return res.status(400).json({ message: "Title is required" });
+      return res.status(400).json({ message: 'Title is required' });
     }
 
     // if assignedTo exists, ensure user is team member
@@ -24,7 +24,7 @@ export const createTask = async (req, res) => {
       if (!isMember) {
         return res
           .status(400)
-          .json({ message: "Assigned user is not a team member" });
+          .json({ message: 'Assigned user is not a team member' });
       }
     }
 
@@ -37,11 +37,17 @@ export const createTask = async (req, res) => {
       createdBy: req.user.id,
     });
 
-    await notifyTask(teamId, `📝 Task created: ${task.title}`);
+    // Fire-and-forget — notify failure must not block task creation
+    notifyTask(teamId, `📝 Task created: ${task.title}`).catch((err) =>
+      console.error('notifyTask (create) error:', err.message)
+    );
 
     res.status(201).json(task);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create task" });
+    console.error('Create task error:', error);
+    res
+      .status(500)
+      .json({ message: 'Failed to create task', detail: error.message });
   }
 };
 
@@ -54,11 +60,11 @@ export const getTeamTasks = async (req, res) => {
 
     const tasks = await Task.find({ teamId })
       .sort({ createdAt: -1 })
-      .populate("assignedTo", "email");
+      .populate('assignedTo', 'email');
 
     res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch tasks" });
+    res.status(500).json({ message: 'Failed to fetch tasks' });
   }
 };
 
@@ -73,15 +79,15 @@ export const updateTask = async (req, res) => {
     const task = await Task.findOne({ _id: taskId, teamId });
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: 'Task not found' });
     }
 
     // only creator or assigned user can update
     if (
-      task.createdBy.toString() !== req.user.id &&
-      task.assignedTo?.toString() !== req.user.id
+      task.createdBy.toString() !== req.user.id.toString() &&
+      task.assignedTo?.toString() !== req.user.id.toString()
     ) {
-      return res.status(403).json({ message: "Not allowed" });
+      return res.status(403).json({ message: 'Not allowed' });
     }
 
     // check assigned user membership
@@ -94,7 +100,7 @@ export const updateTask = async (req, res) => {
       if (!isMember) {
         return res
           .status(400)
-          .json({ message: "Assigned user is not a team member" });
+          .json({ message: 'Assigned user is not a team member' });
       }
     }
 
@@ -106,8 +112,11 @@ export const updateTask = async (req, res) => {
     if (status !== undefined) {
       task.status = status;
 
-      if (status === "done") {
-        await notifyTask(teamId, `✅ Task completed: ${task.title}`);
+      if (status === 'done') {
+        // Fire-and-forget
+        notifyTask(teamId, `✅ Task completed: ${task.title}`).catch((err) =>
+          console.error('notifyTask (done) error:', err.message)
+        );
         sendUpdateNotification = false;
       }
     }
@@ -118,12 +127,18 @@ export const updateTask = async (req, res) => {
     await task.save();
 
     if (sendUpdateNotification) {
-      await notifyTask(teamId, `✏️ Task updated: ${task.title}`);
+      // Fire-and-forget
+      notifyTask(teamId, `✏️ Task updated: ${task.title}`).catch((err) =>
+        console.error('notifyTask (update) error:', err.message)
+      );
     }
 
     res.json(task);
   } catch (error) {
-    res.status(500).json({ message: "Failed to update task" });
+    console.error('Update task error:', error);
+    res
+      .status(500)
+      .json({ message: 'Failed to update task', detail: error.message });
   }
 };
 
@@ -137,20 +152,27 @@ export const deleteTask = async (req, res) => {
     const task = await Task.findOne({ _id: taskId, teamId });
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: 'Task not found' });
     }
 
-    // only creator can delete
-    if (task.createdBy.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not allowed" });
+    // only creator can delete — compare as strings on both sides
+    if (task.createdBy.toString() !== req.user.id.toString()) {
+      return res.status(403).json({ message: 'Not allowed' });
     }
 
-    await notifyTask(teamId, `🗑️ Task deleted: ${task.title}`);
-
+    // Delete first, then notify — so a notify failure doesn't block deletion
     await task.deleteOne();
 
-    res.json({ message: "Task deleted" });
+    // Fire-and-forget — failure here won't fail the request
+    notifyTask(teamId, `🗑️ Task deleted: ${task.title}`).catch((err) =>
+      console.error('notifyTask (delete) error:', err.message)
+    );
+
+    res.json({ message: 'Task deleted' });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete task" });
+    console.error('Delete task error:', error);
+    res
+      .status(500)
+      .json({ message: 'Failed to delete task', detail: error.message });
   }
 };
