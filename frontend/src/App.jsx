@@ -14,10 +14,12 @@ import { useTeams } from "./hooks/useTeams";
 import { useChannels } from "./hooks/useChannels";
 import CreateChannelModal from "./components/CreateChannelModal";
 import { useAuth } from "./context/AuthContext";
+import { useToast } from "./context/ToastContext";
 
 function AuthenticatedApp() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
 
   // ── Teams ──────────────────────────────────────────────────────────────────
   const { teams, refetch: refetchTeams } = useTeams();
@@ -60,9 +62,9 @@ function AuthenticatedApp() {
 
   const handleChannelCreated = (newChannel) => {
     refetchChannels();
-    // Immediately navigate into the new channel
     setActiveChannelId(newChannel._id);
     navigate(`/channels/${newChannel._id}`);
+    toast.success(`#${newChannel.name} is ready`, "Channel created");
   };
 
   // Refetch after returning from CreateTeamPage
