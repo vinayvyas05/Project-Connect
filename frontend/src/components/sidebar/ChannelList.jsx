@@ -75,6 +75,9 @@ export default function ChannelList({
   const navigate = useNavigate();
   const location = useLocation();
 
+  const MAX_CHANNELS = 10;
+  const atLimit = channels.length >= MAX_CHANNELS;
+
   const membersPath = team ? `/teams/${team._id}/members` : null;
   const membersActive = membersPath && location.pathname === membersPath;
 
@@ -97,13 +100,34 @@ export default function ChannelList({
             {/* Channels section */}
             <div>
               <div className="flex items-center justify-between px-2 mb-1">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Channels
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Channels
+                  </span>
+                  {/* Count badge */}
+                  <span
+                    className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                      atLimit
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-gray-800 text-gray-500"
+                    }`}
+                  >
+                    {channels.length}/{MAX_CHANNELS}
+                  </span>
+                </div>
                 <button
-                  onClick={onCreateChannel}
-                  title="New channel"
-                  className="text-gray-500 hover:text-gray-200 transition-colors p-0.5 rounded"
+                  onClick={atLimit ? undefined : onCreateChannel}
+                  disabled={atLimit}
+                  title={
+                    atLimit
+                      ? `Channel limit reached (${MAX_CHANNELS}/${MAX_CHANNELS})`
+                      : "New channel"
+                  }
+                  className={`p-0.5 rounded transition-colors ${
+                    atLimit
+                      ? "text-gray-700 cursor-not-allowed"
+                      : "text-gray-500 hover:text-gray-200"
+                  }`}
                 >
                   <svg
                     className="w-3.5 h-3.5"

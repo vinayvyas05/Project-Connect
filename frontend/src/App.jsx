@@ -44,8 +44,11 @@ function AuthenticatedApp() {
     navigate("/");
   };
 
+  const MAX_CHANNELS = 10;
+
   const handleCreateChannel = () => {
-    if (!activeTeamId) return; // no team selected yet
+    if (!activeTeamId) return;
+    if (channels.length >= MAX_CHANNELS) return; // already at limit; button is disabled in sidebar
     setShowChannelModal(true);
   };
 

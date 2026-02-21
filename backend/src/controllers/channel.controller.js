@@ -1,5 +1,7 @@
 import Channel from '../models/Channel.js';
 
+const MAX_CHANNELS_PER_TEAM = 10;
+
 /**
  * CREATE CHANNEL
  * Route: POST /api/teams/:teamId/channels/create
@@ -15,7 +17,15 @@ export const createChannel = async (req, res) => {
       return res.status(400).json({ message: 'Channel name is required.' });
     }
 
-    // 2. Create channel (unique index handles duplicates per team)
+    // 2. Enforce per-team channel limit
+    const count = await Channel.countDocuments({ teamId });
+    if (count >= MAX_CHANNELS_PER_TEAM) {
+      return res.status(400).json({
+        message: `Channel limit reached. A team can have at most ${MAX_CHANNELS_PER_TEAM} channels.`,
+      });
+    }
+
+    // 3. Create channel (unique index handles duplicates per team)
     const channel = await Channel.create({
       name,
       teamId,
@@ -29,11 +39,9 @@ export const createChannel = async (req, res) => {
   } catch (err) {
     // Duplicate channel name for the same team
     if (err.code === 11000) {
-      return res
-        .status(409)
-        .json({
-          message: 'Channel with this name already exists in the team.',
-        });
+      return res.status(409).json({
+        message: 'Channel with this name already exists in the team.',
+      });
     }
 
     console.error('Create channel error:', err);
