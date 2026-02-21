@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreateTeamPage from "./pages/CreateTeamPage";
 import JoinTeamPage from "./pages/JoinTeamPage";
+import JoinWithInputPage from "./pages/JoinWithInputPage";
 import MembersPage from "./pages/MembersPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
@@ -65,6 +66,15 @@ function AuthenticatedApp() {
       <Route
         path="/join/:token"
         element={<JoinTeamPage onJoined={handleJoined} />}
+      />
+
+      <Route
+        path="/join"
+        element={
+          <div className="flex h-screen w-screen overflow-hidden bg-gray-950">
+            <JoinWithInputPage onJoined={handleJoined} />
+          </div>
+        }
       />
 
       {/* Main shell — all other protected routes */}
