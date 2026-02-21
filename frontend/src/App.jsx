@@ -30,7 +30,11 @@ function AuthenticatedApp() {
   const isAdmin = !!(activeTeam && user && activeTeam.ownerId === user._id);
 
   // ── Channels ───────────────────────────────────────────────────────────────
-  const { channels, refetch: refetchChannels } = useChannels(activeTeamId);
+  const {
+    channels,
+    loading: channelsLoading,
+    refetch: refetchChannels,
+  } = useChannels(activeTeamId);
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [showChannelModal, setShowChannelModal] = useState(false);
 
@@ -115,6 +119,7 @@ function AuthenticatedApp() {
               onCreateChannel={handleCreateChannel}
               onRenameChannel={refetchChannels}
               isAdmin={isAdmin}
+              channelsLoading={channelsLoading}
               refetchTeams={refetchTeams}
               refetchChannels={refetchChannels}
             />

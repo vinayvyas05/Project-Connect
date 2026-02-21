@@ -41,6 +41,7 @@ export default function AppLayout({
   onCreateChannel = () => {},
   onRenameChannel = () => {},
   isAdmin = false,
+  channelsLoading = false,
 }) {
   const location = useLocation();
   // Show EmptyState only on the bare "/" path — any nested route hides it
@@ -60,6 +61,7 @@ export default function AppLayout({
         onCreateChannel={onCreateChannel}
         onRenameChannel={onRenameChannel}
         isAdmin={isAdmin}
+        channelsLoading={channelsLoading}
       />
 
       {/* Main content area */}

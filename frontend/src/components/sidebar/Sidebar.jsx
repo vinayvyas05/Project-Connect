@@ -12,6 +12,7 @@ export default function Sidebar({
   onCreateChannel = () => {},
   onRenameChannel = () => {},
   isAdmin = false,
+  channelsLoading = false,
 }) {
   const activeTeam = teams.find((t) => t._id === activeTeamId) ?? null;
 
@@ -31,6 +32,7 @@ export default function Sidebar({
         onCreateChannel={onCreateChannel}
         onRenameChannel={onRenameChannel}
         isAdmin={isAdmin}
+        channelsLoading={channelsLoading}
       />
     </>
   );

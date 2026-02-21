@@ -99,8 +99,32 @@ export default function MembersPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex-1 overflow-y-auto bg-gray-950 px-6 py-8">
+        {/* Header skeleton */}
+        <div className="flex items-center justify-between mb-6 max-w-2xl mx-auto">
+          <div className="space-y-2">
+            <div className="h-5 w-24 bg-gray-800 rounded-md animate-pulse" />
+            <div className="h-3 w-16 bg-gray-800 rounded-md animate-pulse" />
+          </div>
+          <div className="h-9 w-20 bg-gray-800 rounded-lg animate-pulse" />
+        </div>
+
+        {/* Member rows skeleton */}
+        <div className="max-w-2xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden divide-y divide-gray-800">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-3 px-4 py-3 animate-pulse"
+            >
+              <div className="w-9 h-9 bg-gray-800 rounded-full shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 w-28 bg-gray-800 rounded-md" />
+                <div className="h-2.5 w-40 bg-gray-800 rounded-md" />
+              </div>
+              <div className="h-5 w-14 bg-gray-800 rounded-full" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

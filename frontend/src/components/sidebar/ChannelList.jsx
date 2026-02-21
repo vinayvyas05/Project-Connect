@@ -75,6 +75,7 @@ export default function ChannelList({
   onCreateChannel,
   onRenameChannel, // () => void  — triggers refetchChannels in parent
   isAdmin, // bool — only admins can rename
+  channelsLoading, // bool — shows skeleton while channels are fetching
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -141,41 +142,190 @@ export default function ChannelList({
       {/* Scrollable nav */}
       <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
         {team ? (
-          <>
-            {/* Channels section */}
-            <div>
-              <div className="flex items-center justify-between px-2 mb-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Channels
-                  </span>
-                  {/* Count badge */}
-                  <span
-                    className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+          channelsLoading ? (
+            // ── Channel list skeleton ──────────────────────────────────────
+            <div className="px-2 space-y-5">
+              <div>
+                <div className="h-2.5 w-16 bg-gray-800 rounded animate-pulse mb-3" />
+                <div className="space-y-1">
+                  {[75, 55, 85, 65].map((w, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 px-2 py-1.5"
+                    >
+                      <div className="w-3 h-3 bg-gray-800 rounded-full animate-pulse shrink-0" />
+                      <div
+                        className="h-3 bg-gray-800 rounded-md animate-pulse"
+                        style={{ width: `${w}%` }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="h-2.5 w-10 bg-gray-800 rounded animate-pulse mb-3" />
+                <div className="space-y-1">
+                  {[70, 60].map((w, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 px-2 py-1.5"
+                    >
+                      <div className="w-4 h-4 bg-gray-800 rounded animate-pulse shrink-0" />
+                      <div
+                        className="h-3 bg-gray-800 rounded-md animate-pulse"
+                        style={{ width: `${w}%` }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Channels section */}
+              <div>
+                <div className="flex items-center justify-between px-2 mb-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Channels
+                    </span>
+                    {/* Count badge */}
+                    <span
+                      className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                        atLimit
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-gray-800 text-gray-500"
+                      }`}
+                    >
+                      {channels.length}/{MAX_CHANNELS}
+                    </span>
+                  </div>
+                  <button
+                    onClick={atLimit ? undefined : onCreateChannel}
+                    disabled={atLimit}
+                    title={
                       atLimit
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-gray-800 text-gray-500"
+                        ? `Channel limit reached (${MAX_CHANNELS}/${MAX_CHANNELS})`
+                        : "New channel"
+                    }
+                    className={`p-0.5 rounded transition-colors ${
+                      atLimit
+                        ? "text-gray-700 cursor-not-allowed"
+                        : "text-gray-500 hover:text-gray-200"
                     }`}
                   >
-                    {channels.length}/{MAX_CHANNELS}
-                  </span>
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </button>
                 </div>
+
+                {channels.length === 0 ? (
+                  <p className="text-gray-600 text-xs px-2 py-2">
+                    No channels yet.
+                  </p>
+                ) : (
+                  channels.map((ch) => (
+                    <div key={ch._id} className="group/ch relative">
+                      {renamingId === ch._id ? (
+                        // ── Inline rename input ──────────────────────────────
+                        <div className="px-2 py-1">
+                          <input
+                            ref={inputRef}
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") commitRename(ch);
+                              if (e.key === "Escape") cancelRename();
+                            }}
+                            onBlur={() => commitRename(ch)}
+                            disabled={renameLoading}
+                            placeholder="channel-name"
+                            className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+                          />
+                          {renameError && (
+                            <p className="text-xs text-red-400 mt-1 px-1">
+                              {renameError}
+                            </p>
+                          )}
+                          <p className="text-xs text-gray-600 mt-1 px-1">
+                            Enter to save · Esc to cancel
+                          </p>
+                        </div>
+                      ) : (
+                        // ── Normal channel row ───────────────────────────────
+                        <button
+                          onClick={() => onSelectChannel(ch._id)}
+                          className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
+                          ${
+                            activeChannelId === ch._id
+                              ? "bg-indigo-600/20 text-indigo-300"
+                              : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                          }`}
+                        >
+                          <span className="text-gray-500">#</span>
+                          <span className="truncate flex-1">{ch.name}</span>
+
+                          {/* Pencil — admin only, appears on hover */}
+                          {isAdmin && (
+                            <span
+                              role="button"
+                              tabIndex={0}
+                              title="Rename channel"
+                              onClick={(e) => startRename(ch, e)}
+                              onKeyDown={(e) =>
+                                e.key === "Enter" && startRename(ch, e)
+                              }
+                              className="opacity-0 group-hover/ch:opacity-100 transition-opacity p-0.5 rounded hover:text-white text-gray-500 shrink-0"
+                            >
+                              <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"
+                                />
+                              </svg>
+                            </span>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Members shortcut */}
+              <div>
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 block mb-1">
+                  Team
+                </span>
                 <button
-                  onClick={atLimit ? undefined : onCreateChannel}
-                  disabled={atLimit}
-                  title={
-                    atLimit
-                      ? `Channel limit reached (${MAX_CHANNELS}/${MAX_CHANNELS})`
-                      : "New channel"
-                  }
-                  className={`p-0.5 rounded transition-colors ${
-                    atLimit
-                      ? "text-gray-700 cursor-not-allowed"
-                      : "text-gray-500 hover:text-gray-200"
+                  onClick={() => navigate(membersPath)}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
+                  ${
+                    membersActive
+                      ? "bg-indigo-600/20 text-indigo-300"
+                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
                   }`}
                 >
                   <svg
-                    className="w-3.5 h-3.5"
+                    className="w-4 h-4 shrink-0"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -184,147 +334,38 @@ export default function ChannelList({
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 4v16m8-8H4"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
+                  <span>Members</span>
                 </button>
-              </div>
-
-              {channels.length === 0 ? (
-                <p className="text-gray-600 text-xs px-2 py-2">
-                  No channels yet.
-                </p>
-              ) : (
-                channels.map((ch) => (
-                  <div key={ch._id} className="group/ch relative">
-                    {renamingId === ch._id ? (
-                      // ── Inline rename input ──────────────────────────────
-                      <div className="px-2 py-1">
-                        <input
-                          ref={inputRef}
-                          value={renameValue}
-                          onChange={(e) => setRenameValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") commitRename(ch);
-                            if (e.key === "Escape") cancelRename();
-                          }}
-                          onBlur={() => commitRename(ch)}
-                          disabled={renameLoading}
-                          placeholder="channel-name"
-                          className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
-                        />
-                        {renameError && (
-                          <p className="text-xs text-red-400 mt-1 px-1">
-                            {renameError}
-                          </p>
-                        )}
-                        <p className="text-xs text-gray-600 mt-1 px-1">
-                          Enter to save · Esc to cancel
-                        </p>
-                      </div>
-                    ) : (
-                      // ── Normal channel row ───────────────────────────────
-                      <button
-                        onClick={() => onSelectChannel(ch._id)}
-                        className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                          ${
-                            activeChannelId === ch._id
-                              ? "bg-indigo-600/20 text-indigo-300"
-                              : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                          }`}
-                      >
-                        <span className="text-gray-500">#</span>
-                        <span className="truncate flex-1">{ch.name}</span>
-
-                        {/* Pencil — admin only, appears on hover */}
-                        {isAdmin && (
-                          <span
-                            role="button"
-                            tabIndex={0}
-                            title="Rename channel"
-                            onClick={(e) => startRename(ch, e)}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" && startRename(ch, e)
-                            }
-                            className="opacity-0 group-hover/ch:opacity-100 transition-opacity p-0.5 rounded hover:text-white text-gray-500 shrink-0"
-                          >
-                            <svg
-                              className="w-3 h-3"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Members shortcut */}
-            <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 block mb-1">
-                Team
-              </span>
-              <button
-                onClick={() => navigate(membersPath)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                  ${
-                    membersActive
-                      ? "bg-indigo-600/20 text-indigo-300"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                  }`}
-              >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <span>Members</span>
-              </button>
-              <button
-                onClick={() => navigate(`/teams/${team._id}/tasks`)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
+                <button
+                  onClick={() => navigate(`/teams/${team._id}/tasks`)}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
                   ${
                     location.pathname === `/teams/${team._id}/tasks`
                       ? "bg-indigo-600/20 text-indigo-300"
                       : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
                   }`}
-              >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                  />
-                </svg>
-                <span>Tasks</span>
-              </button>
-            </div>
-          </>
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                    />
+                  </svg>
+                  <span>Tasks</span>
+                </button>
+              </div>
+            </>
+          )
         ) : (
           <p className="text-gray-600 text-xs px-2 py-2">
             Pick a team from the left rail.
