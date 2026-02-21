@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import { authService } from "../api/auth/auth.service";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterPage() {
@@ -17,21 +17,14 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     if (form.password.length < 8) {
       setError("Password must be at least 8 characters.");
       return;
     }
-
     setIsLoading(true);
     try {
-      // Register
-      await api.post("/auth/register", form);
-      // Auto-login after registration
-      const { data } = await api.post("/auth/login", {
-        email: form.email,
-        password: form.password,
-      });
+      await authService.register(form.name, form.email, form.password);
+      const { data } = await authService.login(form.email, form.password);
       login(data.user, data.token);
       navigate("/");
     } catch (err) {
@@ -46,7 +39,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo / Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 mb-4">
             <svg
@@ -69,17 +61,13 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Error */}
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">
                 {error}
               </div>
             )}
-
-            {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Full name
@@ -94,8 +82,6 @@ export default function RegisterPage() {
                 className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email address
@@ -110,12 +96,10 @@ export default function RegisterPage() {
                 className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Password
-                <span className="text-gray-500 font-normal ml-1">
+                Password{" "}
+                <span className="text-gray-500 font-normal">
                   (min. 8 characters)
                 </span>
               </label>
@@ -129,22 +113,19 @@ export default function RegisterPage() {
                 className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-
-            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
               className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg py-3 text-sm transition-colors duration-200 flex items-center justify-center gap-2"
             >
-              {isLoading ? (
+              {isLoading && (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : null}
+              )}
               {isLoading ? "Creating account…" : "Create account"}
             </button>
           </form>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-6">
           Already have an account?{" "}
           <Link

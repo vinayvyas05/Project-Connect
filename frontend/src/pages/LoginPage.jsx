@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import { authService } from "../api/auth/auth.service";
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
     try {
-      const { data } = await api.post("/auth/login", form);
+      const { data } = await authService.login(form.email, form.password);
       login(data.user, data.token);
       navigate("/");
     } catch (err) {
@@ -60,14 +60,11 @@ export default function LoginPage() {
         {/* Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Error */}
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">
                 {error}
               </div>
             )}
-
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email address
@@ -82,8 +79,6 @@ export default function LoginPage() {
                 className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Password
@@ -98,22 +93,19 @@ export default function LoginPage() {
                 className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-
-            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
               className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg py-3 text-sm transition-colors duration-200 flex items-center justify-center gap-2"
             >
-              {isLoading ? (
+              {isLoading && (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : null}
+              )}
               {isLoading ? "Signing in…" : "Sign in"}
             </button>
           </form>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-6">
           Don&apos;t have an account?{" "}
           <Link

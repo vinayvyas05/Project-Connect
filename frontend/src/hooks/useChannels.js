@@ -1,14 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import api from "../api/axios";
+import { channelService } from "../api/channels/channel.service";
 
-/**
- * Fetches channels for a given team.
- * Endpoint: GET /api/teams/:teamId/channels
- * Re-fetches automatically whenever teamId changes.
- *
- * @param {string|null} teamId
- * @returns {{ channels: Array, loading: boolean, error: string|null, refetch: Function }}
- */
 export function useChannels(teamId) {
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +14,7 @@ export function useChannels(teamId) {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await api.get(`/teams/${teamId}/channels`);
+      const { data } = await channelService.getTeamChannels(teamId);
       setChannels(data.channels ?? []);
     } catch (err) {
       setError(err.response?.data?.message ?? "Failed to load channels.");

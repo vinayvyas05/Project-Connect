@@ -1,12 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import api from "../api/axios";
+import { teamService } from "../api/teams/team.service";
 
-/**
- * Fetches the list of teams the logged-in user belongs to.
- * Endpoint: GET /api/teams/my
- *
- * @returns {{ teams: Array, loading: boolean, error: string|null, refetch: Function }}
- */
 export function useTeams() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +10,7 @@ export function useTeams() {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await api.get("/teams/my");
+      const { data } = await teamService.getMyTeams();
       setTeams(data.teams ?? []);
     } catch (err) {
       setError(err.response?.data?.message ?? "Failed to load teams.");
@@ -25,7 +19,6 @@ export function useTeams() {
     }
   }, []);
 
-  // Fetch on mount
   useEffect(() => {
     fetchTeams();
   }, [fetchTeams]);

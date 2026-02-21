@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import CreateTeamPage from "./pages/CreateTeamPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
 import { useTeams } from "./hooks/useTeams";
 import { useChannels } from "./hooks/useChannels";
 
-// Inner component so hooks only run when user is authenticated
 function AuthenticatedApp() {
   const navigate = useNavigate();
 
@@ -15,14 +15,14 @@ function AuthenticatedApp() {
   const { teams, refetch: refetchTeams } = useTeams();
   const [activeTeamId, setActiveTeamId] = useState(null);
 
-  // ── Channels (re-fetches whenever active team changes) ────────────────────
+  // ── Channels ───────────────────────────────────────────────────────────────
   const { channels, refetch: refetchChannels } = useChannels(activeTeamId);
   const [activeChannelId, setActiveChannelId] = useState(null);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleSelectTeam = (teamId) => {
     setActiveTeamId(teamId);
-    setActiveChannelId(null); // reset channel when switching teams
+    setActiveChannelId(null);
   };
 
   const handleSelectChannel = (channelId) => {
@@ -30,15 +30,32 @@ function AuthenticatedApp() {
     navigate(`/channels/${channelId}`);
   };
 
-  // Placeholders — will open modals in Phase 3
   const handleCreateTeam = () => navigate("/teams/new");
+
   const handleCreateChannel = () => {
     // TODO: open create-channel modal in Phase 3
     console.log("Create channel clicked for team:", activeTeamId);
   };
 
+  // Refetch after returning from CreateTeamPage
+  const handleTeamCreated = () => {
+    refetchTeams();
+    navigate("/");
+  };
+
   return (
     <Routes>
+      {/* Create team — rendered inside the protected shell but outside AppLayout */}
+      <Route
+        path="/teams/new"
+        element={
+          <div className="flex h-screen w-screen overflow-hidden bg-gray-950">
+            <CreateTeamPage onCreated={handleTeamCreated} />
+          </div>
+        }
+      />
+
+      {/* Main shell — all other protected routes */}
       <Route
         path="/*"
         element={
@@ -60,16 +77,11 @@ function AuthenticatedApp() {
   );
 }
 
-// ─── Root App ─────────────────────────────────────────────────────────────────
-
 export default function App() {
   return (
     <Routes>
-      {/* Public */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-
-      {/* Protected — hooks only run inside here */}
       <Route
         path="/*"
         element={
@@ -78,7 +90,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
