@@ -41,6 +41,7 @@ export default function AppLayout({
   onCreateChannel = () => {},
 }) {
   const location = useLocation();
+  // Show EmptyState only on the bare "/" path — any nested route hides it
   const isRootPath = location.pathname === "/";
 
   return (

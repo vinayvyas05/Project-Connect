@@ -6,6 +6,8 @@ import CreateTeamPage from "./pages/CreateTeamPage";
 import JoinTeamPage from "./pages/JoinTeamPage";
 import JoinWithInputPage from "./pages/JoinWithInputPage";
 import MembersPage from "./pages/MembersPage";
+import ChannelPage from "./pages/ChannelPage";
+import TaskBoardPage from "./pages/TaskBoardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
 import { useTeams } from "./hooks/useTeams";
@@ -107,6 +109,13 @@ function AuthenticatedApp() {
         >
           {/* Nested routes render inside AppLayout's <Outlet /> */}
           <Route path="teams/:teamId/members" element={<MembersPage />} />
+          <Route
+            path="channels/:channelId"
+            element={
+              <ChannelPage channels={channels} activeTeamId={activeTeamId} />
+            }
+          />
+          <Route path="teams/:teamId/tasks" element={<TaskBoardPage />} />
         </Route>
       </Routes>
 

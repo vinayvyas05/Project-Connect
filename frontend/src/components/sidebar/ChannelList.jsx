@@ -173,6 +173,30 @@ export default function ChannelList({
                 </svg>
                 <span>Members</span>
               </button>
+              <button
+                onClick={() => navigate(`/teams/${team._id}/tasks`)}
+                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
+                  ${
+                    location.pathname === `/teams/${team._id}/tasks`
+                      ? "bg-indigo-600/20 text-indigo-300"
+                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                  }`}
+              >
+                <svg
+                  className="w-4 h-4 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  />
+                </svg>
+                <span>Tasks</span>
+              </button>
             </div>
           </>
         ) : (
