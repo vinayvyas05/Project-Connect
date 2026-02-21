@@ -3,6 +3,8 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreateTeamPage from "./pages/CreateTeamPage";
+import JoinTeamPage from "./pages/JoinTeamPage";
+import MembersPage from "./pages/MembersPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
 import { useTeams } from "./hooks/useTeams";
@@ -32,6 +34,11 @@ function AuthenticatedApp() {
 
   const handleCreateTeam = () => navigate("/teams/new");
 
+  const handleJoined = () => {
+    refetchTeams();
+    navigate("/");
+  };
+
   const handleCreateChannel = () => {
     // TODO: open create-channel modal in Phase 3
     console.log("Create channel clicked for team:", activeTeamId);
@@ -55,6 +62,11 @@ function AuthenticatedApp() {
         }
       />
 
+      <Route
+        path="/join/:token"
+        element={<JoinTeamPage onJoined={handleJoined} />}
+      />
+
       {/* Main shell — all other protected routes */}
       <Route
         path="/*"
@@ -72,7 +84,10 @@ function AuthenticatedApp() {
             refetchChannels={refetchChannels}
           />
         }
-      />
+      >
+        {/* Nested routes render inside AppLayout's <Outlet /> */}
+        <Route path="teams/:teamId/members" element={<MembersPage />} />
+      </Route>
     </Routes>
   );
 }

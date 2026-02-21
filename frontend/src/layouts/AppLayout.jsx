@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/sidebar/Sidebar";
 
 // Empty state shown when no channel is selected
@@ -40,6 +40,9 @@ export default function AppLayout({
   onSelectChannel = () => {},
   onCreateChannel = () => {},
 }) {
+  const location = useLocation();
+  const isRootPath = location.pathname === "/";
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-950">
       {/* Sidebar: team rail + channel list */}
@@ -57,7 +60,7 @@ export default function AppLayout({
       {/* Main content area */}
       <main className="flex-1 flex flex-col overflow-hidden">
         <Outlet />
-        {!activeChannelId && <EmptyState />}
+        {isRootPath && <EmptyState />}
       </main>
     </div>
   );
