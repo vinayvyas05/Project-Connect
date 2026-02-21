@@ -8,6 +8,7 @@ import JoinWithInputPage from "./pages/JoinWithInputPage";
 import MembersPage from "./pages/MembersPage";
 import ChannelPage from "./pages/ChannelPage";
 import TaskBoardPage from "./pages/TaskBoardPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
 import { useTeams } from "./hooks/useTeams";
@@ -134,6 +135,7 @@ function AuthenticatedApp() {
             }
           />
           <Route path="teams/:teamId/tasks" element={<TaskBoardPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
 
@@ -162,7 +164,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
