@@ -1,6 +1,8 @@
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { initials } from "./TeamSidebar";
+import { channelService } from "../../api/channels/channel.service";
 
 // ─── Avatar ───────────────────────────────────────────────────────────────────
 
@@ -71,12 +73,55 @@ export default function ChannelList({
   activeChannelId,
   onSelectChannel,
   onCreateChannel,
+  onRenameChannel, // () => void  — triggers refetchChannels in parent
+  isAdmin, // bool — only admins can rename
 }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const MAX_CHANNELS = 10;
   const atLimit = channels.length >= MAX_CHANNELS;
+
+  // ── Inline rename state ──────────────────────────────────────────────────
+  const [renamingId, setRenamingId] = useState(null); // channel _id being renamed
+  const [renameValue, setRenameValue] = useState("");
+  const [renameError, setRenameError] = useState("");
+  const [renameLoading, setRenameLoading] = useState(false);
+  const inputRef = useRef(null);
+
+  const startRename = (ch, e) => {
+    e.stopPropagation();
+    setRenamingId(ch._id);
+    setRenameValue(ch.name);
+    setRenameError("");
+    setTimeout(() => inputRef.current?.select(), 30);
+  };
+
+  const cancelRename = () => {
+    setRenamingId(null);
+    setRenameError("");
+  };
+
+  const commitRename = async (ch) => {
+    const trimmed = renameValue.trim();
+    if (!trimmed || trimmed === ch.name) {
+      cancelRename();
+      return;
+    }
+    setRenameLoading(true);
+    setRenameError("");
+    try {
+      await channelService.renameChannel(team._id, ch._id, trimmed);
+      setRenamingId(null);
+      onRenameChannel?.(); // refetch sidebar channels
+    } catch (err) {
+      setRenameError(
+        err?.response?.data?.message ?? "Could not rename channel.",
+      );
+    } finally {
+      setRenameLoading(false);
+    }
+  };
 
   const membersPath = team ? `/teams/${team._id}/members` : null;
   const membersActive = membersPath && location.pathname === membersPath;
@@ -151,19 +196,76 @@ export default function ChannelList({
                 </p>
               ) : (
                 channels.map((ch) => (
-                  <button
-                    key={ch._id}
-                    onClick={() => onSelectChannel(ch._id)}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                      ${
-                        activeChannelId === ch._id
-                          ? "bg-indigo-600/20 text-indigo-300"
-                          : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                      }`}
-                  >
-                    <span className="text-gray-500">#</span>
-                    <span className="truncate">{ch.name}</span>
-                  </button>
+                  <div key={ch._id} className="group/ch relative">
+                    {renamingId === ch._id ? (
+                      // ── Inline rename input ──────────────────────────────
+                      <div className="px-2 py-1">
+                        <input
+                          ref={inputRef}
+                          value={renameValue}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") commitRename(ch);
+                            if (e.key === "Escape") cancelRename();
+                          }}
+                          onBlur={() => commitRename(ch)}
+                          disabled={renameLoading}
+                          placeholder="channel-name"
+                          className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+                        />
+                        {renameError && (
+                          <p className="text-xs text-red-400 mt-1 px-1">
+                            {renameError}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-600 mt-1 px-1">
+                          Enter to save · Esc to cancel
+                        </p>
+                      </div>
+                    ) : (
+                      // ── Normal channel row ───────────────────────────────
+                      <button
+                        onClick={() => onSelectChannel(ch._id)}
+                        className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
+                          ${
+                            activeChannelId === ch._id
+                              ? "bg-indigo-600/20 text-indigo-300"
+                              : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                          }`}
+                      >
+                        <span className="text-gray-500">#</span>
+                        <span className="truncate flex-1">{ch.name}</span>
+
+                        {/* Pencil — admin only, appears on hover */}
+                        {isAdmin && (
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            title="Rename channel"
+                            onClick={(e) => startRename(ch, e)}
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && startRename(ch, e)
+                            }
+                            className="opacity-0 group-hover/ch:opacity-100 transition-opacity p-0.5 rounded hover:text-white text-gray-500 shrink-0"
+                          >
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </div>
                 ))
               )}
             </div>

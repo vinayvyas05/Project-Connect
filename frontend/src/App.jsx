@@ -13,13 +13,19 @@ import AppLayout from "./layouts/AppLayout";
 import { useTeams } from "./hooks/useTeams";
 import { useChannels } from "./hooks/useChannels";
 import CreateChannelModal from "./components/CreateChannelModal";
+import { useAuth } from "./context/AuthContext";
 
 function AuthenticatedApp() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // ── Teams ──────────────────────────────────────────────────────────────────
   const { teams, refetch: refetchTeams } = useTeams();
   const [activeTeamId, setActiveTeamId] = useState(null);
+
+  // Derive admin status: team owner = admin
+  const activeTeam = teams.find((t) => t._id === activeTeamId) ?? null;
+  const isAdmin = !!(activeTeam && user && activeTeam.ownerId === user._id);
 
   // ── Channels ───────────────────────────────────────────────────────────────
   const { channels, refetch: refetchChannels } = useChannels(activeTeamId);
@@ -105,6 +111,8 @@ function AuthenticatedApp() {
               activeChannelId={activeChannelId}
               onSelectChannel={handleSelectChannel}
               onCreateChannel={handleCreateChannel}
+              onRenameChannel={refetchChannels}
+              isAdmin={isAdmin}
               refetchTeams={refetchTeams}
               refetchChannels={refetchChannels}
             />

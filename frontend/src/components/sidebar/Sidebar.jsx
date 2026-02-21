@@ -10,6 +10,8 @@ export default function Sidebar({
   activeChannelId = null,
   onSelectChannel = () => {},
   onCreateChannel = () => {},
+  onRenameChannel = () => {},
+  isAdmin = false,
 }) {
   const activeTeam = teams.find((t) => t._id === activeTeamId) ?? null;
 
@@ -27,6 +29,8 @@ export default function Sidebar({
         activeChannelId={activeChannelId}
         onSelectChannel={onSelectChannel}
         onCreateChannel={onCreateChannel}
+        onRenameChannel={onRenameChannel}
+        isAdmin={isAdmin}
       />
     </>
   );
