@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ToastProvider } from "./context/ToastContext";
 import "./index.css";
-import App from "./App.jsx";
+import AppRoutes from "./routes/AppRoutes.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <ToastProvider>
           <SocketProvider>
-            <App />
+            <AppRoutes />
           </SocketProvider>
         </ToastProvider>
       </AuthProvider>
