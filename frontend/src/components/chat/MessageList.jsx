@@ -187,7 +187,11 @@ export default function MessageList({ messages, loading, error }) {
         lastCreatedAt = msgTime;
 
         return (
-          <div key={msg._id ?? i}>
+          <div
+            key={msg._id ?? i}
+            className="animate-msg-in"
+            style={{ animationDelay: `${Math.min(i, 5) * 18}ms` }}
+          >
             {showDate && <DateDivider label={dateLabel} />}
             <MessageBubble
               message={msg}

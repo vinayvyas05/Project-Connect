@@ -44,11 +44,11 @@ export default function TeamSidebar({
           key={team._id}
           onClick={() => onSelect(team._id)}
           title={team.name}
-          className={`w-10 h-10 font-semibold text-sm transition-all duration-150 shrink-0
+          className={`w-10 h-10 font-semibold text-sm transition-all duration-150 shrink-0 btn-press
             ${
               activeTeamId === team._id
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/40 rounded-2xl"
-                : "bg-gray-800 text-gray-300 hover:bg-indigo-600/20 hover:text-indigo-300 hover:rounded-2xl rounded-xl"
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/40 rounded-2xl scale-105"
+                : "bg-gray-800 text-gray-300 hover:bg-indigo-600/20 hover:text-indigo-300 hover:rounded-2xl hover:scale-110 rounded-xl"
             }`}
         >
           {initials(team.name)}
@@ -59,7 +59,7 @@ export default function TeamSidebar({
       <button
         onClick={onCreateTeam}
         title="Create or join a team"
-        className="w-10 h-10 rounded-xl bg-gray-800 text-gray-400 hover:bg-emerald-600/20 hover:text-emerald-400 hover:rounded-2xl transition-all duration-150 flex items-center justify-center shrink-0"
+        className="w-10 h-10 rounded-xl bg-gray-800 text-gray-400 hover:bg-emerald-600/20 hover:text-emerald-400 hover:rounded-2xl hover:scale-110 transition-all duration-150 flex items-center justify-center shrink-0 btn-press"
       >
         <svg
           className="w-5 h-5"

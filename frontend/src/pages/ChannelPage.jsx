@@ -26,7 +26,7 @@ export default function ChannelPage({ channels = [], activeTeamId }) {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden animate-page-in">
       {/* Channel header */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800 shrink-0">
         <span className="text-gray-500 text-lg">#</span>

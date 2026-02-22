@@ -40,6 +40,100 @@
   animation: bounce-x 1.4s ease-in-out infinite;
 }
 
+/* ── General purpose animations ─────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Modal: backdrop + content */
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-backdrop-in {
+  animation: backdrop-in 0.2s ease-out forwards;
+}
+.animate-scale-in {
+  animation: scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Incoming message bubble */
+@keyframes msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-msg-in {
+  animation: msg-in 0.2s ease-out forwards;
+}
+
+/* Page / section mount */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-page-in {
+  animation: page-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pressable button micro-interaction */
+.btn-press {
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.95);
+}
+
 /* ── Custom scrollbar (chat & task board) ───────────────────────────────── */
 ::-webkit-scrollbar {
   width: 4px;

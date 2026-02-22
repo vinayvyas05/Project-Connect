@@ -68,7 +68,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
   const canEdit = isCreator || isAssignee;
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3 hover:border-gray-700 transition-colors group">
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3 hover:border-gray-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/30 transition-all duration-200 group">
       {/* Title row */}
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-medium text-gray-100 leading-snug flex-1">
@@ -137,7 +137,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
         {/* Status cycle button */}
         <button
           onClick={() => onStatusChange(task._id, STATUS_NEXT[task.status])}
-          className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-indigo-600/20 hover:text-indigo-300 text-gray-400 transition-colors shrink-0"
+          className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-indigo-600/20 hover:text-indigo-300 text-gray-400 transition-colors shrink-0 btn-press"
         >
           {STATUS_NEXT_LABEL[task.status]} →
         </button>

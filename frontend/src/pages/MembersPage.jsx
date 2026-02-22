@@ -139,7 +139,7 @@ export default function MembersPage() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto bg-gray-950 px-6 py-8">
+      <div className="flex-1 overflow-y-auto bg-gray-950 px-6 py-8 animate-page-in">
         {/* Page header */}
         <div className="flex items-center justify-between mb-6 max-w-2xl mx-auto">
           <div>
@@ -151,7 +151,7 @@ export default function MembersPage() {
           {isAdmin && (
             <button
               onClick={() => setShowInvite(true)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors btn-press"
             >
               <svg
                 className="w-4 h-4"

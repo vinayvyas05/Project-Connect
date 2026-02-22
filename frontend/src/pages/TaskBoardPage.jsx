@@ -168,7 +168,7 @@ export default function TaskBoardPage() {
 
   return (
     <>
-      <div className="flex flex-col h-full overflow-hidden bg-gray-950">
+      <div className="flex flex-col h-full overflow-hidden bg-gray-950 animate-page-in">
         {/* Page header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 shrink-0">
           <div>
