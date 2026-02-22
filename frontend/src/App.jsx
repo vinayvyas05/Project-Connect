@@ -135,7 +135,6 @@ function AuthenticatedApp() {
             }
           />
           <Route path="teams/:teamId/tasks" element={<TaskBoardPage />} />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
 
