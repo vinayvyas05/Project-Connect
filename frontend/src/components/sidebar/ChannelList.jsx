@@ -246,11 +246,11 @@ export default function ChannelList({
   const membersActive = membersPath && location.pathname === membersPath;
 
   return (
-    <aside className="w-56 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0">
+    <aside className="w-64 flex flex-col shrink-0 glass-panel border-r-0 my-3 mx-3 rounded-2xl relative z-20 overflow-hidden shadow-2xl">
       {/* Team name header */}
-      <div className="px-4 py-4 border-b border-gray-800">
+      <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02]">
         {renamingTeam ? (
-          <div>
+          <div className="animate-fade-in">
             <input
               ref={teamInputRef}
               value={teamRenameValue}
@@ -262,48 +262,53 @@ export default function ChannelList({
               onBlur={() => commitTeamRename()}
               disabled={teamRenameLoading}
               placeholder="Team name"
-              className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full bg-white/5 border border-indigo-500/50 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50 transition-all font-medium"
             />
             {teamRenameError && (
-              <p className="text-xs text-red-400 mt-1 px-1">{teamRenameError}</p>
+              <p className="text-[10px] text-red-400 mt-1.5 px-1 font-medium italic">
+                {teamRenameError}
+              </p>
             )}
-            <p className="text-xs text-gray-600 mt-1 px-1">
-              Enter to save · Esc to cancel
+            <p className="text-[10px] text-gray-500 mt-1.5 px-1 uppercase tracking-tighter opacity-70">
+              Enter to save • Esc to cancel
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
-            <div className="min-w-0">
-              <h2 className="font-semibold text-white truncate text-base">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col min-w-0">
+              <h2 className="font-bold text-white truncate text-base tracking-tight">
                 {team ? team.name : "Select a team"}
               </h2>
-              <p className="text-gray-500 text-xs mt-0.5">
-                {team ? "Workspace" : "—"}
-              </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest opacity-60">
+                  {team ? "Active Workspace" : "Offline"}
+                </p>
+              </div>
             </div>
 
             {/* Owner action buttons */}
             {isOwner && (
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-800">
+              <div className="flex items-center gap-2 pt-3 border-t border-white/5">
                 <button
                   onClick={startTeamRename}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-md transition-colors text-xs font-medium"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-xl transition-all text-[11px] font-bold border border-white/5 active:scale-95 group"
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  <svg className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
                       d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
                   </svg>
-                  Rename Team
+                  Rename
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-md transition-colors text-xs font-medium"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-red-500/5 hover:bg-red-500/20 text-red-400/80 hover:text-red-400 rounded-xl transition-all text-[11px] font-bold border border-red-500/10 active:scale-95 group"
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  <svg className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                  Delete Team
+                  Delete
                 </button>
               </div>
             )}
@@ -312,41 +317,18 @@ export default function ChannelList({
       </div>
 
       {/* Scrollable nav */}
-      <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+      <div className="flex-1 overflow-y-auto pt-5 pb-3 px-3 space-y-7 custom-scrollbar">
         {team ? (
           channelsLoading ? (
             // ── Channel list skeleton ──────────────────────────────────────
-            <div className="px-2 space-y-5">
+            <div className="px-2 space-y-6">
               <div>
-                <div className="h-2.5 w-16 bg-gray-800 rounded animate-pulse mb-3" />
-                <div className="space-y-1">
+                <div className="h-2 w-16 bg-white/5 rounded-full animate-pulse mb-4" />
+                <div className="space-y-3">
                   {[75, 55, 85, 65].map((w, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 px-2 py-1.5"
-                    >
-                      <div className="w-3 h-3 bg-gray-800 rounded-full animate-pulse shrink-0" />
-                      <div
-                        className="h-3 bg-gray-800 rounded-md animate-pulse"
-                        style={{ width: `${w}%` }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="h-2.5 w-10 bg-gray-800 rounded animate-pulse mb-3" />
-                <div className="space-y-1">
-                  {[70, 60].map((w, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 px-2 py-1.5"
-                    >
-                      <div className="w-4 h-4 bg-gray-800 rounded animate-pulse shrink-0" />
-                      <div
-                        className="h-3 bg-gray-800 rounded-md animate-pulse"
-                        style={{ width: `${w}%` }}
-                      />
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-2.5 h-2.5 bg-white/5 rounded-full animate-pulse shrink-0" />
+                      <div className="h-2.5 bg-white/5 rounded-full animate-pulse" style={{ width: `${w}%` }} />
                     </div>
                   ))}
                 </div>
@@ -355,197 +337,149 @@ export default function ChannelList({
           ) : (
             <>
               {/* Channels section */}
-              <div>
-                <div className="flex items-center justify-between px-2 mb-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">
                       Channels
                     </span>
-                    {/* Count badge */}
-                    <span
-                      className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
-                        atLimit
-                          ? "bg-red-500/20 text-red-400"
-                          : "bg-gray-800 text-gray-500"
-                      }`}
-                    >
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white/5 text-gray-500 border border-white/5">
                       {channels.length}/{MAX_CHANNELS}
                     </span>
                   </div>
                   <button
                     onClick={atLimit ? undefined : onCreateChannel}
                     disabled={atLimit}
-                    title={
-                      atLimit
-                        ? `Channel limit reached (${MAX_CHANNELS}/${MAX_CHANNELS})`
-                        : "New channel"
-                    }
-                    className={`p-0.5 rounded transition-colors ${
+                    className={`p-1 rounded-lg transition-all ${
                       atLimit
                         ? "text-gray-700 cursor-not-allowed"
-                        : "text-gray-500 hover:text-gray-200"
+                        : "text-gray-500 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5"
                     }`}
                   >
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
                     </svg>
                   </button>
                 </div>
 
-                {channels.length === 0 ? (
-                  <p className="text-gray-600 text-xs px-2 py-2">
-                    No channels yet.
-                  </p>
-                ) : (
-                  channels.map((ch) => (
-                    <div key={ch._id} className="group/ch relative">
-                      {renamingId === ch._id ? (
-                        // ── Inline rename input ──────────────────────────────
-                        <div className="px-2 py-1">
-                          <input
-                            ref={inputRef}
-                            value={renameValue}
-                            onChange={(e) => setRenameValue(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") commitRename(ch);
-                              if (e.key === "Escape") cancelRename();
-                            }}
-                            onBlur={() => commitRename(ch)}
-                            disabled={renameLoading}
-                            placeholder="channel-name"
-                            className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
-                          />
-                          {renameError && (
-                            <p className="text-xs text-red-400 mt-1 px-1">
-                              {renameError}
-                            </p>
-                          )}
-                          <p className="text-xs text-gray-600 mt-1 px-1">
-                            Enter to save · Esc to cancel
-                          </p>
-                        </div>
-                      ) : (
-                        // ── Normal channel row ───────────────────────────────
-                        <button
-                          onClick={() => onSelectChannel(ch._id)}
-                          className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                          ${
-                            activeChannelId === ch._id
-                              ? "bg-indigo-600/20 text-indigo-300"
-                              : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                          }`}
-                        >
-                          <span className="text-gray-500">#</span>
-                          <span className="truncate flex-1">{ch.name}</span>
+                <div className="space-y-0.5">
+                  {channels.length === 0 ? (
+                    <p className="text-gray-600 text-[11px] font-medium px-3 italic">
+                      No channels yet...
+                    </p>
+                  ) : (
+                    channels.map((ch) => (
+                      <div key={ch._id} className="group/ch relative px-1">
+                        {renamingId === ch._id ? (
+                          <div className="px-2 py-2">
+                            <input
+                              ref={inputRef}
+                              value={renameValue}
+                              onChange={(e) => setRenameValue(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") commitRename(ch);
+                                if (e.key === "Escape") cancelRename();
+                              }}
+                              onBlur={() => commitRename(ch)}
+                              disabled={renameLoading}
+                              className="w-full bg-white/5 border border-indigo-500/50 rounded-lg px-2 py-1.5 text-xs text-white outline-none font-medium"
+                            />
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => onSelectChannel(ch._id)}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border relative group
+                            ${
+                              activeChannelId === ch._id
+                                ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                                : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
+                            }`}
+                          >
+                            <span className={`transition-colors duration-200 ${
+                              activeChannelId === ch._id ? "text-indigo-400" : "text-gray-600 group-hover:text-gray-400"
+                            }`}>#</span>
+                            <span className="truncate flex-1 font-medium">{ch.name}</span>
 
-                          {/* Pencil — admin only, appears on hover */}
-                          {isAdmin && (
-                            <span
-                              role="button"
-                              tabIndex={0}
-                              title="Rename channel"
-                              onClick={(e) => startRename(ch, e)}
-                              onKeyDown={(e) =>
-                                e.key === "Enter" && startRename(ch, e)
-                              }
-                              className="opacity-0 group-hover/ch:opacity-100 transition-opacity p-0.5 rounded hover:text-white text-gray-500 shrink-0"
-                            >
-                              <svg
-                                className="w-3 h-3"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                            {isAdmin && (
+                              <span
+                                role="button"
+                                tabIndex={0}
+                                title="Rename channel"
+                                onClick={(e) => startRename(ch, e)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-lg hover:text-white text-gray-500 shrink-0 hover:bg-white/10"
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"
-                                />
-                              </svg>
-                            </span>
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  ))
-                )}
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
+                                </svg>
+                              </span>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
 
-              {/* Members shortcut */}
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 block mb-1">
-                  Team
-                </span>
-                <button
-                  onClick={() => navigate(membersPath)}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                  ${
-                    membersActive
-                      ? "bg-indigo-600/20 text-indigo-300"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                  }`}
-                >
-                  <svg
-                    className="w-4 h-4 shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              {/* Navigation section */}
+              <div className="space-y-4 pt-2">
+                <div className="px-3">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em]">
+                    Collaboration
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => navigate(membersPath)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border
+                    ${
+                      membersActive
+                        ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                        : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span>Members</span>
-                </button>
-                <button
-                  onClick={() => navigate(`/teams/${team._id}/tasks`)}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors duration-100 text-left
-                  ${
-                    location.pathname === `/teams/${team._id}/tasks`
-                      ? "bg-indigo-600/20 text-indigo-300"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                  }`}
-                >
-                  <svg
-                    className="w-4 h-4 shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    <svg className={`w-4 h-4 shrink-0 transition-colors ${membersActive ? 'text-indigo-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="font-medium">Members</span>
+                  </button>
+                  <button
+                    onClick={() => navigate(`/teams/${team._id}/tasks`)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border
+                    ${
+                      location.pathname === `/teams/${team._id}/tasks`
+                        ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                        : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                    />
-                  </svg>
-                  <span>Tasks</span>
-                </button>
+                    <svg className={`w-4 h-4 shrink-0 transition-colors ${location.pathname === `/teams/${team._id}/tasks` ? 'text-indigo-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <span className="font-medium">Tasks</span>
+                  </button>
+                </div>
               </div>
             </>
           )
         ) : (
-          <p className="text-gray-600 text-xs px-2 py-2">
-            Pick a team from the left rail.
-          </p>
+          <div className="flex flex-col items-center justify-center h-40 text-center px-4">
+             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-4 border border-white/5">
+                <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+             </div>
+             <p className="text-gray-500 text-[11px] font-bold uppercase tracking-widest leading-relaxed">
+               Pick a team <br/> to get started
+             </p>
+          </div>
         )}
       </div>
 
-      <UserFooter />
+      {/* User Footer with glass look */}
+      <div className="mt-auto p-4 bg-white/[0.02] border-t border-white/5">
+        <UserFooter />
+      </div>
 
       {/* Delete confirm modal */}
       {showDeleteConfirm && (
@@ -559,4 +493,5 @@ export default function ChannelList({
     </aside>
   );
 }
+
 

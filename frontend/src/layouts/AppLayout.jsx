@@ -222,7 +222,19 @@ export default function AppLayout({
   const hasChannels = channels.length > 0;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gray-950">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#020202] relative">
+      {/* Ambient backgrounds for glassmorphism to pop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div 
+          className="absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.07]" 
+          style={{ background: 'radial-gradient(circle, #6366f1, transparent)', top: '-10%', left: '-10%' }}
+        />
+        <div 
+          className="absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.05]" 
+          style={{ background: 'radial-gradient(circle, #7c3aed, transparent)', bottom: '-10%', right: '-10%' }}
+        />
+      </div>
+
       {/* Sidebar: team rail + channel list */}
       <Sidebar
         teams={teams}
@@ -241,7 +253,7 @@ export default function AppLayout({
       />
 
       {/* Main content area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative z-10">
         <Outlet />
         {isRootPath && (
           <WelcomeState
@@ -256,3 +268,4 @@ export default function AppLayout({
     </div>
   );
 }
+
