@@ -59,17 +59,19 @@ export function channelSocket(io, socket) {
 
       // emit to channel
       io.to(`channel:${channelId}`).emit('message:new', {
-        _id: message._id,
-        teamId,
-        channelId,
+        _id: String(message._id),
+        teamId: String(teamId),
+        channelId: String(channelId),
         senderId: {
-          _id: socket.user.id,
+          _id: String(socket.user.id),
           name: socket.user.name,
           email: socket.user.email,
         },
         text: message.text,
         createdAt: message.createdAt,
       });
+
+      console.log(`[Socket] Broadcasted new message to channel:${channelId}`);
     } catch (err) {
       console.error('message:send error:', err.message);
     }

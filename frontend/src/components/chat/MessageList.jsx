@@ -115,10 +115,13 @@ export default function MessageList({ messages, loading, error }) {
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    console.log("[UI] MessageList rendered with", messages.length, "messages");
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
   }, [messages]);
 
-  if (loading) {
+  if (loading && messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />

@@ -6,6 +6,9 @@ import MessageInput from "../components/chat/MessageInput";
 export default function ChannelPage({ channels = [], activeTeamId }) {
   const { channelId } = useParams();
 
+  // Track remounts
+  console.log("[UI] ChannelPage Mounting/Rendering for ID:", channelId);
+
   // Look up the channel name from the channels list passed down from App.jsx
   const channel = channels.find((c) => c._id === channelId);
   const channelName = channel?.name ?? "";
@@ -24,6 +27,8 @@ export default function ChannelPage({ channels = [], activeTeamId }) {
       </div>
     );
   }
+
+  console.log("[UI] Passing messages to MessageList, count:", messages.length);
 
   return (
     <div className="flex flex-col h-full overflow-hidden animate-page-in relative z-10">

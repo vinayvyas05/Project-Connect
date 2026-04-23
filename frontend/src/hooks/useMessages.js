@@ -28,8 +28,21 @@ export function useMessages({ teamId, channelId }) {
       .getMessages(teamId, channelId)
       .then(({ data }) => {
         if (!cancelled) {
-          // Backend returns { messages: [] } or flat array
-          setMessages(Array.isArray(data) ? data : (data.messages ?? []));
+          const history = Array.isArray(data) ? data : (data.messages ?? []);
+          
+          setMessages((current) => {
+            // merge history with current state, prioritizing current items to avoid overwriting socket msgs
+            const merged = [...history];
+            
+            current.forEach(msg => {
+              if (!merged.find(m => String(m._id) === String(msg._id))) {
+                merged.push(msg);
+              }
+            });
+
+            // sort by date to keep them in order
+            return merged.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          });
         }
       })
       .catch((err) => {
@@ -56,25 +69,37 @@ export function useMessages({ teamId, channelId }) {
       socket.emit("channel:leave", { channelId: joinedRef.current });
     }
 
+    console.log(`[Socket] Joining room channel:${channelId}`);
     socket.emit("channel:join", { teamId, channelId });
     joinedRef.current = channelId;
 
     const handleNew = (msg) => {
       setMessages((prev) => {
-        // Deduplicate by _id
-        if (prev.some((m) => m._id === msg._id)) return prev;
-        return [...prev, msg];
+        // IMPORTANT: Ensure we compare IDs as strings! (Mongoose ObjectId vs String)
+        const exists = prev.some((m) => String(m._id) === String(msg._id));
+        
+        if (exists) {
+          console.log("[Socket] Message already exists, skipping...");
+          return prev;
+        }
+
+        const next = [...prev, msg];
+        console.log("[Socket] Message added! New total:", next.length);
+        return next;
       });
     };
 
     socket.on("message:new", handleNew);
 
     return () => {
+      console.log(`[Socket] Cleaning up listener for:${channelId}`);
       socket.off("message:new", handleNew);
       socket.emit("channel:leave", { channelId });
       joinedRef.current = null;
     };
   }, [socketRef, isConnected, teamId, channelId]);
+
+
 
   // ── Send via socket ────────────────────────────────────────────────────────
   const sendMessage = useCallback(

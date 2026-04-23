@@ -16,6 +16,7 @@ export function SocketProvider({ children }) {
     // Strip '/api' from the URL if it exists, as sockets connect to the base server.
     const socketUrl = import.meta.env.VITE_URL.replace(/\/api$/, "");
     
+    console.log("[Socket] Connecting to:", socketUrl);
     socketRef.current = io(socketUrl, {
       auth: { token },
       transports: ["websocket"],
