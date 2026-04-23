@@ -11,6 +11,8 @@ export default function Sidebar({
   onSelectChannel = () => {},
   onCreateChannel = () => {},
   onRenameChannel = () => {},
+  onDeleteTeam,
+  onRenameTeam,
   isAdmin = false,
   channelsLoading = false,
 }) {
@@ -31,6 +33,8 @@ export default function Sidebar({
         onSelectChannel={onSelectChannel}
         onCreateChannel={onCreateChannel}
         onRenameChannel={onRenameChannel}
+        onDeleteTeam={onDeleteTeam}
+        onRenameTeam={onRenameTeam}
         isAdmin={isAdmin}
         channelsLoading={channelsLoading}
       />

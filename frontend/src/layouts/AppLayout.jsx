@@ -210,6 +210,8 @@ export default function AppLayout({
   onSelectChannel = () => {},
   onCreateChannel = () => {},
   onRenameChannel = () => {},
+  onDeleteTeam,
+  onRenameTeam,
   isAdmin = false,
   channelsLoading = false,
 }) {
@@ -232,6 +234,8 @@ export default function AppLayout({
         onSelectChannel={onSelectChannel}
         onCreateChannel={onCreateChannel}
         onRenameChannel={onRenameChannel}
+        onDeleteTeam={onDeleteTeam}
+        onRenameTeam={onRenameTeam}
         isAdmin={isAdmin}
         channelsLoading={channelsLoading}
       />

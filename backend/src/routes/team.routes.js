@@ -6,6 +6,8 @@ import {
   generateInviteLink,
   joinTeam,
   getTeamMembers,
+  renameTeam,
+  deleteTeam,
 } from '../controllers/team.controller.js';
 import { isTeamAdmin, isTeamMember } from '../middleware/team.middleware.js';
 import channelRoutes from './channel.routes.js';
@@ -32,9 +34,16 @@ router.post('/join', authMiddleware, joinTeam);
 // GET /api/teams/:teamId/members
 router.get('/:teamId/members', authMiddleware, isTeamMember, getTeamMembers);
 
+// PATCH /api/teams/:teamId  (owner only — rename)
+router.patch('/:teamId', authMiddleware, renameTeam);
+
+// DELETE /api/teams/:teamId  (owner only — delete)
+router.delete('/:teamId', authMiddleware, deleteTeam);
+
 router.use('/:teamId/channels', channelRoutes);
 
 // inside router
 router.use('/:teamId/tasks', taskRoutes);
 
 export default router;
+

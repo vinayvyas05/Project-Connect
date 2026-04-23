@@ -35,6 +35,8 @@ export default function AuthRoutes({
   isAdmin,
   refetchTeams,
   refetchChannels,
+  onDeleteTeam,
+  onRenameTeam,
 }) {
   return (
     <>
@@ -77,6 +79,8 @@ export default function AuthRoutes({
               onSelectChannel={onSelectChannel}
               onCreateChannel={onCreateChannel}
               onRenameChannel={onRenameChannel}
+              onDeleteTeam={onDeleteTeam}
+              onRenameTeam={onRenameTeam}
               isAdmin={isAdmin}
               channelsLoading={channelsLoading}
               refetchTeams={refetchTeams}

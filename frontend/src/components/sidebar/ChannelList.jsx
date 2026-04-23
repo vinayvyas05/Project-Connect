@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { initials } from "./TeamSidebar";
 import { channelService } from "../../api/channels/channel.service";
+import { teamService } from "../../api/teams/team.service";
 
 // ─── Avatar ───────────────────────────────────────────────────────────────────
 
@@ -65,6 +66,51 @@ function UserFooter() {
   );
 }
 
+// ─── Delete Confirmation Modal ────────────────────────────────────────────────
+
+function DeleteConfirmModal({ teamName, onConfirm, onCancel, loading }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-sm mx-4 shadow-2xl animate-page-in">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+            <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-white font-semibold text-sm">Delete team</h3>
+            <p className="text-gray-500 text-xs">This action cannot be undone</p>
+          </div>
+        </div>
+
+        <p className="text-gray-400 text-sm mb-6">
+          Are you sure you want to delete <strong className="text-white">{teamName}</strong>?
+          All channels, messages, tasks, and members will be permanently removed.
+        </p>
+
+        <div className="flex items-center gap-3 justify-end">
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={loading}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-500 transition-colors disabled:opacity-50"
+          >
+            {loading ? "Deleting…" : "Delete team"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── ChannelList ──────────────────────────────────────────────────────────────
 
 export default function ChannelList({
@@ -74,16 +120,88 @@ export default function ChannelList({
   onSelectChannel,
   onCreateChannel,
   onRenameChannel, // () => void  — triggers refetchChannels in parent
+  onDeleteTeam,    // () => void  — called after team is deleted
+  onRenameTeam,    // () => void  — called after team is renamed (refetchTeams)
   isAdmin, // bool — only admins can rename
   channelsLoading, // bool — shows skeleton while channels are fetching
 }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+
+  const isOwner = !!(
+    team &&
+    user &&
+    String(team.ownerId) === String(user._id)
+  );
+
+  useEffect(() => {
+    console.log("ChannelList debug:", {
+      teamId: team?._id,
+      teamOwner: team?.ownerId,
+      userId: user?._id,
+      isOwner
+    });
+  }, [team, user, isOwner]);
 
   const MAX_CHANNELS = 10;
   const atLimit = channels.length >= MAX_CHANNELS;
 
-  // ── Inline rename state ──────────────────────────────────────────────────
+  const [renamingTeam, setRenamingTeam] = useState(false);
+  const [teamRenameValue, setTeamRenameValue] = useState("");
+  const [teamRenameError, setTeamRenameError] = useState("");
+  const [teamRenameLoading, setTeamRenameLoading] = useState(false);
+  const teamInputRef = useRef(null);
+
+  // ── Team delete state ───────────────────────────────────────────────────
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const startTeamRename = () => {
+    setRenamingTeam(true);
+    setTeamRenameValue(team?.name || "");
+    setTeamRenameError("");
+    setTimeout(() => teamInputRef.current?.select(), 30);
+  };
+
+  const cancelTeamRename = () => {
+    setRenamingTeam(false);
+    setTeamRenameError("");
+  };
+
+  const commitTeamRename = async () => {
+    const trimmed = teamRenameValue.trim();
+    if (!trimmed || trimmed === team?.name) {
+      cancelTeamRename();
+      return;
+    }
+    setTeamRenameLoading(true);
+    setTeamRenameError("");
+    try {
+      await teamService.renameTeam(team._id, trimmed);
+      setRenamingTeam(false);
+      onRenameTeam?.();
+    } catch (err) {
+      setTeamRenameError(err?.response?.data?.message ?? "Could not rename team.");
+    } finally {
+      setTeamRenameLoading(false);
+    }
+  };
+
+  const handleDeleteTeam = async () => {
+    setDeleteLoading(true);
+    try {
+      await teamService.deleteTeam(team._id);
+      setShowDeleteConfirm(false);
+      navigate("/");
+      onDeleteTeam?.();
+    } catch (err) {
+      console.error("Delete team error:", err);
+      setDeleteLoading(false);
+    }
+  };
+
+  // ── Inline channel rename state ─────────────────────────────────────────
   const [renamingId, setRenamingId] = useState(null); // channel _id being renamed
   const [renameValue, setRenameValue] = useState("");
   const [renameError, setRenameError] = useState("");
@@ -131,12 +249,66 @@ export default function ChannelList({
     <aside className="w-56 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0">
       {/* Team name header */}
       <div className="px-4 py-4 border-b border-gray-800">
-        <h2 className="font-semibold text-white truncate text-sm">
-          {team ? team.name : "Select a team"}
-        </h2>
-        <p className="text-gray-500 text-xs mt-0.5">
-          {team ? "Workspace" : "—"}
-        </p>
+        {renamingTeam ? (
+          <div>
+            <input
+              ref={teamInputRef}
+              value={teamRenameValue}
+              onChange={(e) => setTeamRenameValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitTeamRename();
+                if (e.key === "Escape") cancelTeamRename();
+              }}
+              onBlur={() => commitTeamRename()}
+              disabled={teamRenameLoading}
+              placeholder="Team name"
+              className="w-full bg-gray-800 border border-indigo-500 rounded-md px-2 py-1 text-sm text-white placeholder-gray-600 outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+            />
+            {teamRenameError && (
+              <p className="text-xs text-red-400 mt-1 px-1">{teamRenameError}</p>
+            )}
+            <p className="text-xs text-gray-600 mt-1 px-1">
+              Enter to save · Esc to cancel
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="min-w-0">
+              <h2 className="font-semibold text-white truncate text-base">
+                {team ? team.name : "Select a team"}
+              </h2>
+              <p className="text-gray-500 text-xs mt-0.5">
+                {team ? "Workspace" : "—"}
+              </p>
+            </div>
+
+            {/* Owner action buttons */}
+            {isOwner && (
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-800">
+                <button
+                  onClick={startTeamRename}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-md transition-colors text-xs font-medium"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
+                  </svg>
+                  Rename Team
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-md transition-colors text-xs font-medium"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Delete Team
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Scrollable nav */}
@@ -374,6 +546,17 @@ export default function ChannelList({
       </div>
 
       <UserFooter />
+
+      {/* Delete confirm modal */}
+      {showDeleteConfirm && (
+        <DeleteConfirmModal
+          teamName={team?.name}
+          onConfirm={handleDeleteTeam}
+          onCancel={() => setShowDeleteConfirm(false)}
+          loading={deleteLoading}
+        />
+      )}
     </aside>
   );
 }
+

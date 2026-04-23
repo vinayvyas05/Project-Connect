@@ -10,4 +10,8 @@ export const teamService = {
   generateInviteLink: (teamId) => api.post(`/teams/${teamId}/invite`),
 
   joinTeam: (token) => api.post("/teams/join", { token }),
+
+  renameTeam: (teamId, name) => api.patch(`/teams/${teamId}`, { name }),
+
+  deleteTeam: (teamId) => api.delete(`/teams/${teamId}`),
 };

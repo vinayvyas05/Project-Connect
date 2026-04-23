@@ -71,6 +71,16 @@ export default function App() {
     navigate("/");
   };
 
+  const handleDeleteTeam = () => {
+    setActiveTeamId(null);
+    setActiveChannelId(null);
+    refetchTeams();
+  };
+
+  const handleRenameTeam = () => {
+    refetchTeams();
+  };
+
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
     <AuthRoutes
@@ -96,6 +106,8 @@ export default function App() {
       isAdmin={isAdmin}
       refetchTeams={refetchTeams}
       refetchChannels={refetchChannels}
+      onDeleteTeam={handleDeleteTeam}
+      onRenameTeam={handleRenameTeam}
     />
   );
 }

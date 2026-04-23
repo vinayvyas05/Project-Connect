@@ -1,5 +1,8 @@
 import Team from '../models/Team.js';
 import TeamMember from '../models/TeamMember.js';
+import Channel from '../models/Channel.js';
+import Message from '../models/Message.js';
+import Task from '../models/Task.js';
 import jwt from 'jsonwebtoken';
 
 /**
@@ -27,6 +30,13 @@ export const createTeam = async (req, res) => {
       teamId: team._id,
       userId,
       role: 'admin',
+    });
+
+    // 4. Create default #general channel
+    await Channel.create({
+      name: 'general',
+      teamId: team._id,
+      createdBy: userId,
     });
 
     return res.status(201).json({
@@ -181,5 +191,89 @@ export const getTeamMembers = async (req, res) => {
     res.status(200).json(members);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+/**
+ * RENAME TEAM (owner only)
+ * Route: PATCH /api/teams/:teamId
+ */
+export const renameTeam = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const userId = req.userId;
+    const { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: 'Team name is required.' });
+    }
+
+    // 1. Find the team
+    const team = await Team.findById(teamId);
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found.' });
+    }
+
+    // 2. Only the owner can rename
+    if (team.ownerId.toString() !== userId.toString()) {
+      return res
+        .status(403)
+        .json({ message: 'Only the team owner can rename this team.' });
+    }
+
+    // 3. Update name
+    team.name = name.trim();
+    await team.save();
+
+    return res.status(200).json({
+      message: 'Team renamed successfully.',
+      team,
+    });
+  } catch (err) {
+    console.error('Rename team error:', err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+/**
+ * DELETE TEAM (owner only)
+ * Route: DELETE /api/teams/:teamId
+ * Cascades: removes all channels, messages, tasks, and memberships
+ */
+export const deleteTeam = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const userId = req.userId;
+
+    // 1. Find the team
+    const team = await Team.findById(teamId);
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found.' });
+    }
+
+    // 2. Only the owner can delete
+    if (team.ownerId.toString() !== userId.toString()) {
+      return res
+        .status(403)
+        .json({ message: 'Only the team owner can delete this team.' });
+    }
+
+    // 3. Cascade delete all related data
+    await Promise.all([
+      Message.deleteMany({ teamId }),
+      Channel.deleteMany({ teamId }),
+      Task.deleteMany({ teamId }),
+      TeamMember.deleteMany({ teamId }),
+    ]);
+
+    // 4. Delete the team itself
+    await Team.findByIdAndDelete(teamId);
+
+    return res.status(200).json({
+      message: 'Team and all related data deleted successfully.',
+    });
+  } catch (err) {
+    console.error('Delete team error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
