@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
@@ -7,6 +7,7 @@ const SocketContext = createContext(null);
 export function SocketProvider({ children }) {
   const { token } = useAuth();
   const socketRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (!token) return;
@@ -17,22 +18,32 @@ export function SocketProvider({ children }) {
       transports: ["websocket"],
     });
 
+    socketRef.current.on("connect", () => {
+      setIsConnected(true);
+    });
+
+    socketRef.current.on("disconnect", () => {
+      setIsConnected(false);
+    });
+
     socketRef.current.on("connect_error", (err) => {
       console.error("[Socket] connection error:", err.message);
+      setIsConnected(false);
     });
 
     return () => {
       socketRef.current?.disconnect();
       socketRef.current = null;
+      setIsConnected(false);
     };
   }, [token]);
 
   return (
-    <SocketContext.Provider value={socketRef}>
+    <SocketContext.Provider value={{ socketRef, isConnected }}>
       {children}
     </SocketContext.Provider>
   );
 }
 
-/** Returns the raw socket ref — call socketRef.current to use it */
+/** Returns { socketRef, isConnected } — use socketRef.current for the raw socket */
 export const useSocket = () => useContext(SocketContext);

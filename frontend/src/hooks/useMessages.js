@@ -9,7 +9,7 @@ import { useSocket } from "../context/SocketContext";
  * @returns {{ messages, loading, error, sendMessage }}
  */
 export function useMessages({ teamId, channelId }) {
-  const socketRef = useSocket();
+  const { socketRef, isConnected } = useSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -49,7 +49,7 @@ export function useMessages({ teamId, channelId }) {
   // ── Socket: join room + listen for new messages ────────────────────────────
   useEffect(() => {
     const socket = socketRef?.current;
-    if (!socket || !teamId || !channelId) return;
+    if (!socket || !isConnected || !teamId || !channelId) return;
 
     // Leave previous room if switching channels
     if (joinedRef.current && joinedRef.current !== channelId) {
@@ -74,17 +74,18 @@ export function useMessages({ teamId, channelId }) {
       socket.emit("channel:leave", { channelId });
       joinedRef.current = null;
     };
-  }, [socketRef, teamId, channelId]);
+  }, [socketRef, isConnected, teamId, channelId]);
 
   // ── Send via socket ────────────────────────────────────────────────────────
   const sendMessage = useCallback(
     (text) => {
       const socket = socketRef?.current;
-      if (!socket || !text.trim()) return;
+      if (!socket || !isConnected || !text.trim()) return;
       socket.emit("message:send", { teamId, channelId, text: text.trim() });
     },
-    [socketRef, teamId, channelId],
+    [socketRef, isConnected, teamId, channelId],
   );
 
   return { messages, loading, error, sendMessage };
 }
+
