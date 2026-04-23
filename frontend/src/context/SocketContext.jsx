@@ -13,7 +13,10 @@ export function SocketProvider({ children }) {
     if (!token) return;
 
     // Connect with JWT auth
-    socketRef.current = io("http://localhost:5000", {
+    // Strip '/api' from the URL if it exists, as sockets connect to the base server.
+    const socketUrl = import.meta.env.VITE_URL.replace(/\/api$/, "");
+    
+    socketRef.current = io(socketUrl, {
       auth: { token },
       transports: ["websocket"],
     });
