@@ -19,7 +19,7 @@ export default function Sidebar({
   const activeTeam = teams.find((t) => t._id === activeTeamId) ?? null;
 
   return (
-    <>
+    <div className="flex h-full shrink-0 relative z-20">
       <TeamSidebar
         teams={teams}
         activeTeamId={activeTeamId}
@@ -38,6 +38,7 @@ export default function Sidebar({
         isAdmin={isAdmin}
         channelsLoading={channelsLoading}
       />
-    </>
+    </div>
   );
 }
+
