@@ -23,6 +23,7 @@ export function useMessages({ teamId, channelId }) {
     let cancelled = false;
     setLoading(true);
     setError(null);
+    setMessages([]); // Clear messages when channel changes
 
     messageService
       .getMessages(teamId, channelId)
