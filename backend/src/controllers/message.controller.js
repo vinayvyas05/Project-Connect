@@ -1,5 +1,5 @@
-import Message from "../models/Message.js";
-import Channel from "../models/Channel.js";
+import Message from '../models/Message.js';
+import Channel from '../models/Channel.js';
 
 /**
  * SEND MESSAGE
@@ -13,13 +13,15 @@ export const sendMessage = async (req, res) => {
 
     // 1. Validate input
     if (!text || !text.trim()) {
-      return res.status(400).json({ message: "Message text is required." });
+      return res.status(400).json({ message: 'Message text is required.' });
     }
 
     // 2. Ensure channel belongs to this team
     const channel = await Channel.findOne({ _id: channelId, teamId });
     if (!channel) {
-      return res.status(404).json({ message: "Channel not found in this team." });
+      return res
+        .status(404)
+        .json({ message: 'Channel not found in this team.' });
     }
 
     // 3. Create message
@@ -27,20 +29,18 @@ export const sendMessage = async (req, res) => {
       teamId,
       channelId,
       senderId: userId,
-      text
+      text,
     });
 
     return res.status(201).json({
-      message: "Message sent.",
-      data: message
+      message: 'Message sent.',
+      data: message,
     });
-
   } catch (err) {
-    console.error("Send message error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Send message error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };
-
 
 /**
  * GET MESSAGE HISTORY
@@ -60,7 +60,9 @@ export const getMessages = async (req, res) => {
     // 1. Ensure channel belongs to this team
     const channel = await Channel.findOne({ _id: channelId, teamId });
     if (!channel) {
-      return res.status(404).json({ message: "Channel not found in this team." });
+      return res
+        .status(404)
+        .json({ message: 'Channel not found in this team.' });
     }
 
     // 2. Build query
@@ -69,7 +71,7 @@ export const getMessages = async (req, res) => {
     if (before) {
       // support cursor by date or by message id
       if (before.match(/^[0-9a-fA-F]{24}$/)) {
-        const cursorMsg = await Message.findById(before).select("createdAt");
+        const cursorMsg = await Message.findById(before).select('createdAt');
         if (cursorMsg) {
           query.createdAt = { $lt: cursorMsg.createdAt };
         }
@@ -85,19 +87,18 @@ export const getMessages = async (req, res) => {
     const messages = await Message.find(query)
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate("senderId", "name email");
+      .populate('senderId', 'name email');
 
     // 4. Return oldest → newest for UI
     messages.reverse();
 
     return res.status(200).json({
-      message: "Messages fetched successfully.",
+      message: 'Messages fetched successfully.',
       messages,
-      hasMore: messages.length === limit
+      hasMore: messages.length === limit,
     });
-
   } catch (err) {
-    console.error("Get messages error:", err);
-    return res.status(500).json({ message: "Server error." });
+    console.error('Get messages error:', err);
+    return res.status(500).json({ message: 'Server error.' });
   }
 };

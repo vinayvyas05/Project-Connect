@@ -30,4 +30,4 @@ const channelSchema = new Schema(
 // Ensure channel name is unique per team
 channelSchema.index({ name: 1, teamId: 1 }, { unique: true });
 
-export default model("Channel", channelSchema);
+export default model('Channel', channelSchema);

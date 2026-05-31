@@ -1,12 +1,12 @@
-import Channel from "../models/Channel.js";
-import Message from "../models/Message.js";
-import { getIO } from "../sockets/index.js";
+import Channel from '../models/Channel.js';
+import Message from '../models/Message.js';
+import { getIO } from '../sockets/index.js';
 
 export async function notifyTask(teamId, text) {
   // find general channel
   const channel = await Channel.findOne({
     teamId,
-    name: "general",
+    name: 'general',
   });
 
   if (!channel) return;
@@ -22,7 +22,7 @@ export async function notifyTask(teamId, text) {
   // emit real-time
   const io = getIO();
   if (io) {
-    io.to(`channel:${channel._id}`).emit("message:new", {
+    io.to(`channel:${channel._id}`).emit('message:new', {
       _id: message._id,
       teamId,
       channelId: channel._id,

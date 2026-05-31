@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { register, login } from '../controllers/auth.controller.js';
+import {
+  register,
+  login,
+  refreshAccessToken,
+} from '../controllers/auth.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -8,6 +12,9 @@ const router = Router();
 router.post('/register', register);
 
 router.post('/login', login);
+
+// POST /api/auth/refresh
+router.post('/refresh', refreshAccessToken);
 
 router.get('/profile', authMiddleware, (req, res) => {
   res.json({ message: 'Authorized', userId: req.userId });

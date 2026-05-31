@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const taskSchema = new mongoose.Schema(
   {
     // which team this task belongs to
     teamId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Team",
+      ref: 'Team',
       required: true,
       index: true,
     },
@@ -20,28 +20,28 @@ const taskSchema = new mongoose.Schema(
     // optional task details
     description: {
       type: String,
-      default: "",
+      default: '',
     },
 
     // who created the task
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
 
     // who is responsible for the task
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       default: null,
     },
 
     // progress status
     status: {
       type: String,
-      enum: ["todo", "in_progress", "done"],
-      default: "todo",
+      enum: ['todo', 'in_progress', 'done'],
+      default: 'todo',
     },
 
     // optional deadline
@@ -58,4 +58,4 @@ const taskSchema = new mongoose.Schema(
 // index for fast task listing per team
 taskSchema.index({ teamId: 1, createdAt: -1 });
 
-export default mongoose.model("Task", taskSchema);
+export default mongoose.model('Task', taskSchema);

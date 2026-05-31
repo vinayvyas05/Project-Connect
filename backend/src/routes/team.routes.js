@@ -46,4 +46,3 @@ router.use('/:teamId/channels', channelRoutes);
 router.use('/:teamId/tasks', taskRoutes);
 
 export default router;
-

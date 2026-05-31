@@ -26,7 +26,7 @@ export async function socketAuth(socket, next) {
 
     next();
   } catch (err) {
-    console.error("Socket Auth Error:", err.message);
+    console.error('Socket Auth Error:', err.message);
     next(new Error('Unauthorized'));
   }
 }
