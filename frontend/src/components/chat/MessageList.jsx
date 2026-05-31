@@ -26,10 +26,12 @@ function formatDate(dateStr) {
 // ─── Date Divider ─────────────────────────────────────────────────────────────
 function DateDivider({ label }) {
   return (
-    <div className="flex items-center gap-3 my-4 px-4">
-      <div className="flex-1 h-px bg-gray-800" />
-      <span className="text-xs text-gray-500 font-medium">{label}</span>
-      <div className="flex-1 h-px bg-gray-800" />
+    <div className="flex items-center gap-4 my-6 px-6 select-none">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <span className="text-[10px] text-slate-400/80 font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/[0.02] border border-white/[0.06] shadow-sm backdrop-blur-sm">
+        {label}
+      </span>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
     </div>
   );
 }
@@ -37,12 +39,12 @@ function DateDivider({ label }) {
 // ─── Avatar ───────────────────────────────────────────────────────────────────
 function Avatar({ name }) {
   const colours = [
-    "bg-indigo-600",
-    "bg-violet-600",
-    "bg-sky-600",
-    "bg-emerald-600",
-    "bg-rose-600",
-    "bg-amber-600",
+    "from-indigo-500 to-indigo-600 border-indigo-400/20 shadow-indigo-500/10",
+    "from-violet-500 to-violet-600 border-violet-400/20 shadow-violet-500/10",
+    "from-sky-500 to-sky-600 border-sky-400/20 shadow-sky-500/10",
+    "from-emerald-500 to-emerald-600 border-emerald-400/20 shadow-emerald-500/10",
+    "from-rose-500 to-rose-600 border-rose-400/20 shadow-rose-500/10",
+    "from-amber-500 to-amber-600 border-amber-400/20 shadow-amber-500/10",
   ];
   const colour = colours[(name?.charCodeAt(0) || 0) % colours.length];
   const initials = (name || "?")
@@ -53,7 +55,7 @@ function Avatar({ name }) {
     .toUpperCase();
   return (
     <div
-      className={`w-8 h-8 ${colour} rounded-full flex items-center justify-center text-xs font-semibold text-white shrink-0 mt-0.5`}
+      className={`w-8 h-8 bg-gradient-to-tr ${colour} rounded-lg flex items-center justify-center text-[11px] font-bold text-white shrink-0 mt-0.5 border shadow-sm select-none`}
     >
       {initials}
     </div>
@@ -65,10 +67,13 @@ function MessageBubble({ message, isOwn, showHeader }) {
   // System message (task notifications — senderId is null)
   if (!message.senderId) {
     return (
-      <div className="flex items-center gap-3 px-4 py-1 my-1">
-        <div className="flex-1 h-px bg-gray-800/60" />
-        <p className="text-xs text-gray-500 italic shrink-0">{message.text}</p>
-        <div className="flex-1 h-px bg-gray-800/60" />
+      <div className="flex items-center gap-4 px-6 py-2 my-2 select-none group">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.01] border border-white/[0.04] shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+          <p className="text-[11px] text-slate-400 font-medium tracking-wide">{message.text}</p>
+        </div>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
       </div>
     );
   }
@@ -77,26 +82,34 @@ function MessageBubble({ message, isOwn, showHeader }) {
   const name = sender?.name ?? "Unknown";
 
   return (
-    <div className={`flex gap-3 px-4 py-0.5 group ${showHeader ? "mt-3" : ""}`}>
+    <div className={`flex gap-3 px-6 py-1.5 transition-colors duration-150 hover:bg-white/[0.015] rounded-lg group relative ${showHeader ? "mt-3" : ""}`}>
       {/* Avatar — only on first message of a group */}
-      <div className="w-8 shrink-0">{showHeader && <Avatar name={name} />}</div>
+      <div className="w-8 shrink-0 select-none">
+        {showHeader ? (
+          <Avatar name={name} />
+        ) : (
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[10px] text-slate-500 font-medium block text-right pr-2 mt-1">
+            {formatTime(message.createdAt)}
+          </span>
+        )}
+      </div>
 
       <div className="flex-1 min-w-0">
         {/* Name + timestamp — only on header message */}
         {showHeader && (
-          <div className="flex items-baseline gap-2 mb-1">
+          <div className="flex items-baseline gap-2 mb-1 select-none">
             <span
-              className={`text-sm font-semibold ${isOwn ? "text-indigo-300" : "text-gray-200"}`}
+              className={`text-sm font-semibold tracking-tight transition-colors duration-150 ${isOwn ? "text-indigo-400" : "text-slate-200 hover:text-indigo-400 cursor-pointer"}`}
             >
               {isOwn ? "You" : name}
             </span>
-            <span className="text-xs text-gray-600">
+            <span className="text-[10px] text-slate-500 font-medium">
               {formatTime(message.createdAt)}
             </span>
           </div>
         )}
         {/* Text */}
-        <p className="text-sm text-gray-300 leading-relaxed break-words">
+        <p className="text-[14px] text-slate-300/90 leading-relaxed break-words tracking-wide">
           {message.text}
         </p>
       </div>
@@ -124,25 +137,38 @@ export default function MessageList({ messages, loading, error }) {
   if (loading && messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="flex flex-col items-center gap-3">
+          <div className="relative w-8 h-8">
+            <div className="absolute inset-0 rounded-full border-2 border-indigo-500/20" />
+            <div className="absolute inset-0 rounded-full border-2 border-t-indigo-500 animate-spin" />
+          </div>
+          <span className="text-xs text-slate-500 font-medium">Loading messages...</span>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <p className="text-red-400 text-sm">{error}</p>
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="flex flex-col items-center gap-3 px-6 py-4 rounded-xl bg-rose-500/5 border border-rose-500/10 shadow-sm max-w-sm text-center">
+          <div className="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 select-none">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <p className="text-rose-400 text-sm font-medium">{error}</p>
+        </div>
       </div>
     );
   }
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-2">
-        <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-2">
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-4 select-none">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 flex items-center justify-center mb-2 shadow-lg shadow-indigo-500/5">
           <svg
-            className="w-6 h-6 text-gray-600"
+            className="w-8 h-8 text-indigo-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -155,8 +181,10 @@ export default function MessageList({ messages, loading, error }) {
             />
           </svg>
         </div>
-        <p className="text-white font-medium text-sm">No messages yet</p>
-        <p className="text-gray-500 text-xs">Be the first to say something!</p>
+        <div className="space-y-1">
+          <p className="text-slate-200 font-semibold text-base tracking-tight">No messages yet</p>
+          <p className="text-slate-500 text-sm max-w-xs">Be the first to start the conversation in this channel!</p>
+        </div>
       </div>
     );
   }
@@ -167,7 +195,7 @@ export default function MessageList({ messages, loading, error }) {
   let lastCreatedAt = null; // track the timestamp of the previous message
 
   return (
-    <div className="flex-1 overflow-y-auto py-4">
+    <div className="flex-1 overflow-y-auto py-6 px-2 space-y-0.5 scrollbar-thin">
       {messages.map((msg, i) => {
         const dateLabel = formatDate(msg.createdAt);
         const showDate = dateLabel !== lastDate;
