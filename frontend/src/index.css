@@ -12,8 +12,8 @@
   --color-background: #FAFAFA;
   --color-surface: #FFFFFF;
   
-  --color-sidebar: #F9FAFB;
-  --color-sidebar-hover: #F3F4F6;
+  --color-sidebar: #F1F5F9;
+  --color-sidebar-hover: #E2E8F0;
   
   --color-text-primary: #18181B;
   --color-text-secondary: #71717A;
@@ -23,9 +23,9 @@
   --color-error: #EF4444;
   
   --color-kanban-todo: #E4E4E7;
-  --color-kanban-progress: #DBEAFE;
+  --color-kanban-progress: #E2EEFF;
   --color-kanban-review: #FEF3C7;
-  --color-kanban-done: #DCFCE7;
+  --color-kanban-done: #E6F8EC;
 }
 
 body {

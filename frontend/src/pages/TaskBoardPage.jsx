@@ -9,9 +9,9 @@ import EditTaskModal from "../components/tasks/EditTaskModal";
 // ─── Column ────────────────────────────────────────────────────────────────────
 
 const COLUMN_STYLES = {
-  todo: { bg: "bg-[#E4E4E7]", dot: "bg-gray-500", header: "text-gray-600" },
-  in_progress: { bg: "bg-[#DBEAFE]", dot: "bg-blue-500", header: "text-blue-700" },
-  done: { bg: "bg-[#DCFCE7]", dot: "bg-emerald-500", header: "text-emerald-700" },
+  todo: { bg: "bg-kanban-todo", dot: "bg-gray-500", header: "text-gray-600" },
+  in_progress: { bg: "bg-kanban-progress", dot: "bg-blue-500", header: "text-blue-700" },
+  done: { bg: "bg-kanban-done", dot: "bg-emerald-500", header: "text-emerald-700" },
 };
 
 function Column({ status, tasks, onStatusChange, onEdit, onDelete }) {
@@ -104,9 +104,9 @@ export default function TaskBoardPage() {
   if (loading) {
     // ── Kanban skeleton — matches 3-column board layout ──────────────────────
     const COLS = [
-      { dot: "bg-gray-400", label: "w-10", cards: 2, bg: "bg-[#E4E4E7]" },
-      { dot: "bg-blue-400", label: "w-20", cards: 3, bg: "bg-[#DBEAFE]" },
-      { dot: "bg-emerald-400", label: "w-8", cards: 1, bg: "bg-[#DCFCE7]" },
+      { dot: "bg-gray-400", label: "w-10", cards: 2, bg: "bg-kanban-todo" },
+      { dot: "bg-blue-400", label: "w-20", cards: 3, bg: "bg-kanban-progress" },
+      { dot: "bg-emerald-400", label: "w-8", cards: 1, bg: "bg-kanban-done" },
     ];
     return (
       <div className="flex flex-col h-full overflow-hidden bg-background">

@@ -68,7 +68,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
   const canEdit = isCreator || isAssignee;
 
   return (
-    <div className="bg-surface border border-gray-200 rounded-xl p-4 space-y-3 hover:border-gray-300 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 group">
+    <div className="bg-surface border border-gray-200 shadow-sm hover:shadow-md rounded-xl p-4 space-y-3 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-200 group">
       {/* Title row */}
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-medium text-text-primary leading-snug flex-1">
