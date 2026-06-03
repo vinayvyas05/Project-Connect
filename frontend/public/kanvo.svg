@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Solid, deep modern slate base (App Icon style) -->
+  <rect width="32" height="32" rx="9" fill="#0F172A" />
+  
+  <!-- Subtle inner gradient border for high-end look -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="8.5" stroke="url(#borderGrad)" stroke-opacity="0.15" />
+
+  <defs>
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Clean, white stroke monogram K -->
+  <path 
+    d="M11 9v14 M21 9l-10 7 10 7" 
+    stroke="#FFFFFF" 
+    stroke-width="3" 
+    stroke-linecap="round" 
+    stroke-linejoin="round" 
+  />
+</svg>

@@ -131,7 +131,7 @@ export default function NotFoundPage() {
 
         {/* Tiny hint */}
         <p className="mt-10 text-xs text-gray-400">
-          DevPulse · Project Connect
+          Kanvo · Simple Collaboration
         </p>
       </div>
 

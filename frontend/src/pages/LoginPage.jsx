@@ -37,8 +37,8 @@ export default function LoginPage() {
       <div className="hidden lg:flex flex-col w-[60%] bg-surface border-r border-gray-200 relative">
         <div className="p-8 absolute top-0 left-0 w-full">
           <div className="flex items-center gap-2">
-            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
-            <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
+            <img src="/kanvo.svg" alt="Kanvo Logo" className="w-8 h-8 rounded" />
+            <span className="font-semibold tracking-tight text-lg text-text-primary">Kanvo</span>
           </div>
         </div>
 
@@ -48,9 +48,9 @@ export default function LoginPage() {
             alt="Productivity" 
             className="w-full max-w-md mb-10" 
           />
-          <h2 className="text-2xl font-bold tracking-tight mb-2 text-text-primary">Build faster, together.</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-2 text-text-primary">Collaboration, simplified.</h2>
           <p className="text-text-secondary text-center max-w-sm text-sm leading-relaxed">
-            Join your team to manage projects, tasks, and communication all in one centralized platform.
+            A clean, distraction-free space to chat with your team and track tasks—without the complexity of legacy tools.
           </p>
         </div>
       </div>
@@ -60,8 +60,8 @@ export default function LoginPage() {
         <div className="w-full max-w-sm mx-auto">
           {/* Mobile Logo */}
           <div className="flex lg:hidden items-center gap-2 mb-10">
-            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
-            <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
+            <img src="/kanvo.svg" alt="Kanvo Logo" className="w-8 h-8 rounded" />
+            <span className="font-semibold tracking-tight text-lg text-text-primary">Kanvo</span>
           </div>
 
           <h1 className="text-3xl font-semibold tracking-tight mb-2 text-text-primary">Welcome back</h1>

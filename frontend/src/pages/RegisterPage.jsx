@@ -43,8 +43,8 @@ export default function RegisterPage() {
         <div className="w-full max-w-sm mx-auto">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-10">
-            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
-            <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
+            <img src="/kanvo.svg" alt="Kanvo Logo" className="w-8 h-8 rounded" />
+            <span className="font-semibold tracking-tight text-lg text-text-primary">Kanvo</span>
           </div>
 
           <h1 className="text-3xl font-semibold tracking-tight mb-2 text-text-primary">Create an account</h1>
@@ -132,9 +132,9 @@ export default function RegisterPage() {
             alt="Collaboration" 
             className="w-full max-w-lg mb-12" 
           />
-          <h2 className="text-2xl font-bold tracking-tight mb-2 text-text-primary">Power your team's workflow.</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-2 text-text-primary">Zero bloat. Just teamwork.</h2>
           <p className="text-text-secondary text-center max-w-md text-sm leading-relaxed">
-            Create an account to start assigning tasks, tracking progress, and shipping amazing products together.
+            Create an account to start managing tasks and chatting in a workspace built for speed, not configuration.
           </p>
         </div>
       </div>

@@ -21,8 +21,8 @@ export default function TeamSidebar({
     <nav className="w-18 flex flex-col items-center py-4 gap-4 shrink-0 bg-sidebar border-r border-gray-200 relative z-30 shadow-xl h-full">
       {/* App logo */}
       <img 
-        src="/devpulse.svg" 
-        alt="DevPulse Logo" 
+        src="/kanvo.svg" 
+        alt="Kanvo Logo" 
         className="w-11 h-11 mb-2 shrink-0 rounded-2xl shadow-sm"
       />
 
