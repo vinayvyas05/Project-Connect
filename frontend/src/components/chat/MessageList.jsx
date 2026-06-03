@@ -27,11 +27,11 @@ function formatDate(dateStr) {
 function DateDivider({ label }) {
   return (
     <div className="flex items-center gap-4 my-6 px-6 select-none">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-      <span className="text-[10px] text-slate-400/80 font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/[0.02] border border-white/[0.06] shadow-sm backdrop-blur-sm">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      <span className="text-[10px] text-text-secondary font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-surface border border-gray-200 shadow-sm">
         {label}
       </span>
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
     </div>
   );
 }
@@ -68,12 +68,12 @@ function MessageBubble({ message, isOwn, showHeader }) {
   if (!message.senderId) {
     return (
       <div className="flex items-center gap-4 px-6 py-2 my-2 select-none group">
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.01] border border-white/[0.04] shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
-          <p className="text-[11px] text-slate-400 font-medium tracking-wide">{message.text}</p>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-200 shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          <p className="text-[11px] text-text-secondary font-medium tracking-wide">{message.text}</p>
         </div>
-        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
       </div>
     );
   }
@@ -82,13 +82,13 @@ function MessageBubble({ message, isOwn, showHeader }) {
   const name = sender?.name ?? "Unknown";
 
   return (
-    <div className={`flex gap-3 px-6 py-1.5 transition-colors duration-150 hover:bg-white/[0.015] rounded-lg group relative ${showHeader ? "mt-3" : ""}`}>
+    <div className={`flex gap-3 px-6 py-1.5 transition-colors duration-150 hover:bg-gray-50 rounded-lg group relative ${showHeader ? "mt-3" : ""}`}>
       {/* Avatar — only on first message of a group */}
       <div className="w-8 shrink-0 select-none">
         {showHeader ? (
           <Avatar name={name} />
         ) : (
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[10px] text-slate-500 font-medium block text-right pr-2 mt-1">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[10px] text-text-secondary font-medium block text-right pr-2 mt-1">
             {formatTime(message.createdAt)}
           </span>
         )}
@@ -99,17 +99,17 @@ function MessageBubble({ message, isOwn, showHeader }) {
         {showHeader && (
           <div className="flex items-baseline gap-2 mb-1 select-none">
             <span
-              className={`text-sm font-semibold tracking-tight transition-colors duration-150 ${isOwn ? "text-indigo-400" : "text-slate-200 hover:text-indigo-400 cursor-pointer"}`}
+              className={`text-sm font-semibold tracking-tight transition-colors duration-150 ${isOwn ? "text-primary" : "text-text-primary hover:text-primary cursor-pointer"}`}
             >
               {isOwn ? "You" : name}
             </span>
-            <span className="text-[10px] text-slate-500 font-medium">
+            <span className="text-[10px] text-text-secondary font-medium">
               {formatTime(message.createdAt)}
             </span>
           </div>
         )}
         {/* Text */}
-        <p className="text-[14px] text-slate-300/90 leading-relaxed break-words tracking-wide">
+        <p className="text-[14px] text-text-primary leading-relaxed break-words tracking-wide">
           {message.text}
         </p>
       </div>
@@ -139,10 +139,10 @@ export default function MessageList({ messages, loading, error }) {
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="relative w-8 h-8">
-            <div className="absolute inset-0 rounded-full border-2 border-indigo-500/20" />
-            <div className="absolute inset-0 rounded-full border-2 border-t-indigo-500 animate-spin" />
+            <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+            <div className="absolute inset-0 rounded-full border-2 border-t-primary animate-spin" />
           </div>
-          <span className="text-xs text-slate-500 font-medium">Loading messages...</span>
+          <span className="text-xs text-text-secondary font-medium">Loading messages...</span>
         </div>
       </div>
     );
@@ -166,9 +166,9 @@ export default function MessageList({ messages, loading, error }) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-4 select-none">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 flex items-center justify-center mb-2 shadow-lg shadow-indigo-500/5">
+        <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-2 shadow-sm">
           <svg
-            className="w-8 h-8 text-indigo-400"
+            className="w-8 h-8 text-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -182,8 +182,8 @@ export default function MessageList({ messages, loading, error }) {
           </svg>
         </div>
         <div className="space-y-1">
-          <p className="text-slate-200 font-semibold text-base tracking-tight">No messages yet</p>
-          <p className="text-slate-500 text-sm max-w-xs">Be the first to start the conversation in this channel!</p>
+          <p className="text-text-primary font-semibold text-base tracking-tight">No messages yet</p>
+          <p className="text-text-secondary text-sm max-w-xs">Be the first to start the conversation in this channel!</p>
         </div>
       </div>
     );

@@ -26,9 +26,9 @@ function DueBadge({ dueDate }) {
   const now = new Date();
   const diffDays = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
 
-  let colour = "text-gray-400 bg-gray-800";
-  if (diffDays < 0) colour = "text-red-400 bg-red-500/10";
-  else if (diffDays <= 2) colour = "text-amber-400 bg-amber-500/10";
+  let colour = "text-gray-600 bg-gray-100";
+  if (diffDays < 0) colour = "text-error bg-error/10";
+  else if (diffDays <= 2) colour = "text-amber-600 bg-amber-500/10";
 
   return (
     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${colour}`}>
@@ -68,17 +68,17 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
   const canEdit = isCreator || isAssignee;
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3 hover:border-gray-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/30 transition-all duration-200 group">
+    <div className="bg-surface border border-gray-200 rounded-xl p-4 space-y-3 hover:border-gray-300 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 group">
       {/* Title row */}
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium text-gray-100 leading-snug flex-1">
+        <p className="text-sm font-medium text-text-primary leading-snug flex-1">
           {task.title}
         </p>
         {canEdit && (
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
             <button
               onClick={() => onEdit(task)}
-              className="p-1 text-gray-500 hover:text-gray-200 transition-colors rounded"
+              className="p-1 text-text-secondary hover:text-text-primary transition-colors rounded"
               title="Edit"
             >
               <svg
@@ -98,7 +98,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
             {isCreator && (
               <button
                 onClick={() => onDelete(task._id)}
-                className="p-1 text-gray-500 hover:text-red-400 transition-colors rounded"
+                className="p-1 text-text-secondary hover:text-error transition-colors rounded"
                 title="Delete"
               >
                 <svg
@@ -122,7 +122,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
 
       {/* Description */}
       {task.description && (
-        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+        <p className="text-xs text-text-secondary leading-relaxed line-clamp-2">
           {task.description}
         </p>
       )}
@@ -137,7 +137,7 @@ export default function TaskCard({ task, onStatusChange, onEdit, onDelete }) {
         {/* Status cycle button */}
         <button
           onClick={() => onStatusChange(task._id, STATUS_NEXT[task.status])}
-          className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-indigo-600/20 hover:text-indigo-300 text-gray-400 transition-colors shrink-0 btn-press"
+          className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-primary/10 hover:text-primary text-gray-600 transition-colors shrink-0 btn-press border border-gray-200 hover:border-primary/20"
         >
           {STATUS_NEXT_LABEL[task.status]} →
         </button>

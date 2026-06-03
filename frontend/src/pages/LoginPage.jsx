@@ -32,17 +32,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#0A0A0B] text-white overflow-hidden">
+    <div className="flex h-screen w-full bg-background text-text-primary overflow-hidden">
       {/* Left Side: 60% (Illustration) */}
-      <div className="hidden lg:flex flex-col w-[60%] bg-[#111115] border-r border-white/5 relative">
+      <div className="hidden lg:flex flex-col w-[60%] bg-surface border-r border-gray-200 relative">
         <div className="p-8 absolute top-0 left-0 w-full">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="font-semibold tracking-tight text-lg">DevPulse</span>
+            <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
           </div>
         </div>
 
@@ -52,8 +52,8 @@ export default function LoginPage() {
             alt="Productivity" 
             className="w-full max-w-md mb-10" 
           />
-          <h2 className="text-2xl font-bold tracking-tight mb-2">Build faster, together.</h2>
-          <p className="text-gray-400 text-center max-w-sm text-sm leading-relaxed">
+          <h2 className="text-2xl font-bold tracking-tight mb-2 text-text-primary">Build faster, together.</h2>
+          <p className="text-text-secondary text-center max-w-sm text-sm leading-relaxed">
             Join your team to manage projects, tasks, and communication all in one centralized platform.
           </p>
         </div>
@@ -64,27 +64,27 @@ export default function LoginPage() {
         <div className="w-full max-w-sm mx-auto">
           {/* Mobile Logo */}
           <div className="flex lg:hidden items-center gap-2 mb-10">
-            <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="font-semibold tracking-tight text-lg">Project Connect</span>
+            <span className="font-semibold tracking-tight text-lg text-text-primary">Project Connect</span>
           </div>
 
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">Welcome back</h1>
-          <p className="text-gray-400 mb-8 text-sm">Please enter your details to sign in.</p>
+          <h1 className="text-3xl font-semibold tracking-tight mb-2 text-text-primary">Welcome back</h1>
+          <p className="text-text-secondary mb-8 text-sm">Please enter your details to sign in.</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-md">
+              <div className="p-3 text-sm text-error bg-error/10 border border-error/20 rounded-md">
                 {error}
               </div>
             )}
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-text-primary mb-1.5">Email</label>
                 <input
                   type="email"
                   name="email"
@@ -92,14 +92,14 @@ export default function LoginPage() {
                   onChange={handleChange}
                   required
                   placeholder="name@company.com"
-                  className="w-full bg-white/[0.03] border border-white/10 text-white placeholder-gray-500 rounded-md px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 text-text-primary placeholder-gray-400 rounded-md px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
               
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-sm font-medium text-gray-300">Password</label>
-                  <a href="#" className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Forgot password?</a>
+                  <label className="block text-sm font-medium text-text-primary">Password</label>
+                  <a href="#" className="text-xs font-medium text-primary hover:text-primary-hover transition-colors">Forgot password?</a>
                 </div>
                 <input
                   type="password"
@@ -108,7 +108,7 @@ export default function LoginPage() {
                   onChange={handleChange}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-white/[0.03] border border-white/10 text-white placeholder-gray-500 rounded-md px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 text-text-primary placeholder-gray-400 rounded-md px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-md py-2.5 text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-primary hover:bg-primary-hover text-white font-medium rounded-md py-2.5 text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isLoading && (
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -127,9 +127,9 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <p className="text-center text-gray-400 text-sm mt-8">
+          <p className="text-center text-text-secondary text-sm mt-8">
             Don&apos;t have an account?{" "}
-            <Link to="/register" className="text-white hover:text-indigo-400 font-medium transition-colors">
+            <Link to="/register" className="text-primary hover:text-primary-hover font-medium transition-colors">
               Sign up
             </Link>
           </p>

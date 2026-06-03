@@ -246,7 +246,7 @@ export default function ChannelList({
   const membersActive = membersPath && location.pathname === membersPath;
 
   return (
-    <aside className="w-64 flex flex-col shrink-0 glass-panel border-r-0 my-3 mx-3 rounded-2xl relative z-20 overflow-hidden shadow-2xl">
+    <aside className="w-64 flex flex-col shrink-0 bg-sidebar border-r border-gray-800 relative z-20 overflow-hidden text-gray-300 h-full">
       {/* Team name header */}
       <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02]">
         {renamingTeam ? (
@@ -262,7 +262,7 @@ export default function ChannelList({
               onBlur={() => commitTeamRename()}
               disabled={teamRenameLoading}
               placeholder="Team name"
-              className="w-full bg-white/5 border border-indigo-500/50 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50 transition-all font-medium"
+              className="w-full bg-white/5 border border-primary/50 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 transition-all font-medium"
             />
             {teamRenameError && (
               <p className="text-[10px] text-red-400 mt-1.5 px-1 font-medium italic">
@@ -391,12 +391,12 @@ export default function ChannelList({
                             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border relative group
                             ${
                               activeChannelId === ch._id
-                                ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                                ? "bg-primary/[0.08] border-primary/20 text-primary shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
                                 : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
                             }`}
                           >
                             <span className={`transition-colors duration-200 ${
-                              activeChannelId === ch._id ? "text-indigo-400" : "text-gray-600 group-hover:text-gray-400"
+                              activeChannelId === ch._id ? "text-primary" : "text-gray-600 group-hover:text-gray-400"
                             }`}>#</span>
                             <span className="truncate flex-1 font-medium">{ch.name}</span>
 
@@ -435,11 +435,11 @@ export default function ChannelList({
                     className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border
                     ${
                       membersActive
-                        ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                        ? "bg-primary/[0.08] border-primary/20 text-primary shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
                         : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
                     }`}
                   >
-                    <svg className={`w-4 h-4 shrink-0 transition-colors ${membersActive ? 'text-indigo-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className={`w-4 h-4 shrink-0 transition-colors ${membersActive ? 'text-primary' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span className="font-medium">Members</span>
@@ -449,11 +449,11 @@ export default function ChannelList({
                     className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-200 text-left border
                     ${
                       location.pathname === `/teams/${team._id}/tasks`
-                        ? "bg-indigo-500/[0.08] border-indigo-500/20 text-indigo-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                        ? "bg-primary/[0.08] border-primary/20 text-primary shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
                         : "text-gray-400 hover:text-gray-200 border-transparent hover:bg-white/[0.03] hover:border-white/5"
                     }`}
                   >
-                    <svg className={`w-4 h-4 shrink-0 transition-colors ${location.pathname === `/teams/${team._id}/tasks` ? 'text-indigo-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className={`w-4 h-4 shrink-0 transition-colors ${location.pathname === `/teams/${team._id}/tasks` ? 'text-primary' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
                     <span className="font-medium">Tasks</span>

@@ -47,8 +47,7 @@ function WelcomeState({
         <div className="relative z-10 flex flex-col items-center max-w-sm">
           {/* Icon */}
           <div
-            className="w-20 h-20 rounded-3xl mb-6 flex items-center justify-center shadow-2xl"
-            style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed)" }}
+            className="w-20 h-20 rounded-3xl mb-6 flex items-center justify-center shadow-xl bg-primary"
           >
             <svg
               className="w-10 h-10 text-white"
@@ -65,10 +64,10 @@ function WelcomeState({
             </svg>
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-text-primary mb-2">
             Welcome to Project Connect
           </h2>
-          <p className="text-gray-500 text-sm leading-relaxed mb-8">
+          <p className="text-text-secondary text-sm leading-relaxed mb-8">
             Select a team from the left rail to get started, or create a new
             one.
           </p>
@@ -94,19 +93,16 @@ function WelcomeState({
             ].map(({ n, label, sub }) => (
               <div
                 key={n}
-                className="flex items-start gap-3 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3"
+                className="flex items-start gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm"
               >
                 <span
-                  className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs font-bold text-white mt-0.5"
-                  style={{
-                    background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                  }}
+                  className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs font-bold text-white mt-0.5 bg-primary"
                 >
                   {n}
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-gray-200">{label}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
+                  <p className="text-sm font-medium text-text-primary">{label}</p>
+                  <p className="text-xs text-text-secondary mt-0.5">{sub}</p>
                 </div>
               </div>
             ))}
@@ -114,11 +110,7 @@ function WelcomeState({
 
           <button
             onClick={onCreateTeam}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
-            style={{
-              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-              boxShadow: "0 0 20px rgba(99,102,241,0.3)",
-            }}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all bg-primary hover:bg-primary-hover shadow-[0_0_15px_rgba(99,102,241,0.2)]"
           >
             <svg
               className="w-4 h-4"
@@ -145,9 +137,9 @@ function WelcomeState({
     <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
       <div className="flex flex-col items-center max-w-xs">
         {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl bg-gray-900 border border-gray-800 flex items-center justify-center mb-4 shadow-xl">
+        <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 flex items-center justify-center mb-4 shadow-sm">
           <svg
-            className="w-8 h-8 text-indigo-400"
+            className="w-8 h-8 text-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -161,10 +153,10 @@ function WelcomeState({
           </svg>
         </div>
 
-        <h3 className="text-white font-semibold text-lg mb-1">
+        <h3 className="text-text-primary font-semibold text-lg mb-1">
           {hasChannels ? "Pick a channel" : "No channels yet"}
         </h3>
-        <p className="text-gray-500 text-sm mb-6">
+        <p className="text-text-secondary text-sm mb-6">
           {hasChannels
             ? "Select a channel from the sidebar to start chatting with your team."
             : "Your team doesn't have any channels yet. Create one to get the conversation started."}
@@ -173,11 +165,7 @@ function WelcomeState({
         {!hasChannels && isAdmin && (
           <button
             onClick={onCreateChannel}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
-            style={{
-              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-              boxShadow: "0 0 16px rgba(99,102,241,0.3)",
-            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-hover transition-colors shadow-[0_0_15px_rgba(99,102,241,0.2)]"
           >
             <svg
               className="w-4 h-4"
@@ -222,18 +210,7 @@ export default function AppLayout({
   const hasChannels = channels.length > 0;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#020202] relative">
-      {/* Ambient backgrounds for glassmorphism to pop */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div 
-          className="absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.07]" 
-          style={{ background: 'radial-gradient(circle, #6366f1, transparent)', top: '-10%', left: '-10%' }}
-        />
-        <div 
-          className="absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.05]" 
-          style={{ background: 'radial-gradient(circle, #7c3aed, transparent)', bottom: '-10%', right: '-10%' }}
-        />
-      </div>
+    <div className="flex h-screen w-screen overflow-hidden bg-[var(--color-background)] relative">
 
       {/* Sidebar: team rail + channel list */}
       <Sidebar
