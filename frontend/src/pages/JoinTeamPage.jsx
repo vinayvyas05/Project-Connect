@@ -49,25 +49,25 @@ export default function JoinTeamPage({ onJoined }) {
   }, [token, onJoined]);
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm text-center">
         {/* Joining — spinner */}
         {state === STATE.JOINING && (
           <div className="flex flex-col items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center">
-              <span className="w-6 h-6 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <span className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
-            <p className="text-gray-300 font-medium">Joining team…</p>
-            <p className="text-gray-500 text-sm">Verifying your invite link</p>
+            <p className="text-text-primary font-medium">Joining team…</p>
+            <p className="text-text-secondary text-sm">Verifying your invite link</p>
           </div>
         )}
 
         {/* Success */}
         {(state === STATE.SUCCESS || state === STATE.ALREADY) && team && (
           <div className="flex flex-col items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-success/10 border border-success/30 flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-emerald-400"
+                className="w-8 h-8 text-success"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -81,21 +81,21 @@ export default function JoinTeamPage({ onJoined }) {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white mb-1">
+              <h1 className="text-2xl font-bold text-text-primary mb-1">
                 {state === STATE.ALREADY
                   ? "Already a member!"
                   : "You're in! 🎉"}
               </h1>
-              <p className="text-gray-400 text-sm">
+              <p className="text-text-secondary text-sm">
                 {state === STATE.ALREADY
                   ? `You're already part of `
                   : `You've successfully joined `}
-                <span className="text-white font-semibold">{team.name}</span>
+                <span className="text-text-primary font-semibold">{team.name}</span>
               </p>
             </div>
             <button
               onClick={() => navigate("/")}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg py-3 text-sm transition-colors"
+              className="w-full bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg py-3 text-sm transition-colors shadow-sm"
             >
               Go to workspace →
             </button>
@@ -105,9 +105,9 @@ export default function JoinTeamPage({ onJoined }) {
         {/* Error */}
         {state === STATE.ERROR && (
           <div className="flex flex-col items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-error/10 border border-error/30 flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-red-400"
+                className="w-8 h-8 text-error"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -121,21 +121,21 @@ export default function JoinTeamPage({ onJoined }) {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white mb-1">
+              <h1 className="text-2xl font-bold text-text-primary mb-1">
                 Invite invalid
               </h1>
-              <p className="text-gray-400 text-sm">{errorMsg}</p>
+              <p className="text-text-secondary text-sm">{errorMsg}</p>
             </div>
             <div className="flex flex-col gap-2 w-full">
               <button
                 onClick={() => navigate("/")}
-                className="w-full bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium rounded-lg py-3 text-sm transition-colors"
+                className="w-full bg-gray-100 hover:bg-gray-200 text-text-secondary font-medium rounded-lg py-3 text-sm transition-colors"
               >
                 Back to home
               </button>
               <button
                 onClick={() => navigate("/teams/new")}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg py-3 text-sm transition-colors"
+                className="w-full bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg py-3 text-sm transition-colors shadow-sm"
               >
                 Create a new team instead
               </button>

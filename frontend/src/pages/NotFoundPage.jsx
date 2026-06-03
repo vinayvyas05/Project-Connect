@@ -4,7 +4,7 @@ export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-6 select-none overflow-hidden relative">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 select-none overflow-hidden relative">
       {/* ── Ambient glow blobs ───────────────────────────────────────────────── */}
       <div
         className="absolute w-96 h-96 rounded-full opacity-10 blur-3xl pointer-events-none"
@@ -51,9 +51,9 @@ export default function NotFoundPage() {
         </div>
 
         {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl bg-gray-900 border border-gray-800 flex items-center justify-center mb-6 shadow-xl">
+        <div className="w-16 h-16 rounded-2xl bg-surface border border-gray-200 flex items-center justify-center mb-6 shadow-sm">
           <svg
-            className="w-8 h-8 text-indigo-400"
+            className="w-8 h-8 text-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -68,8 +68,8 @@ export default function NotFoundPage() {
         </div>
 
         {/* Copy */}
-        <h1 className="text-2xl font-bold text-white mb-3">Lost in the void</h1>
-        <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-xs">
+        <h1 className="text-2xl font-bold text-text-primary mb-3">Lost in the void</h1>
+        <p className="text-text-secondary text-sm leading-relaxed mb-8 max-w-xs">
           The page you're looking for doesn't exist, was moved, or you may have
           mistyped the URL.
         </p>
@@ -78,7 +78,7 @@ export default function NotFoundPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-400 border border-gray-800 hover:border-gray-700 hover:text-gray-200 transition-colors bg-gray-900"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-text-secondary border border-gray-200 hover:border-gray-300 hover:text-text-primary transition-colors bg-surface shadow-sm"
           >
             <svg
               className="w-4 h-4"
@@ -130,7 +130,7 @@ export default function NotFoundPage() {
         </div>
 
         {/* Tiny hint */}
-        <p className="mt-10 text-xs text-gray-700">
+        <p className="mt-10 text-xs text-gray-400">
           DevPulse · Project Connect
         </p>
       </div>
