@@ -3,6 +3,7 @@ import {
   register,
   login,
   refreshAccessToken,
+  logout,
 } from '../controllers/auth.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 
@@ -15,6 +16,9 @@ router.post('/login', login);
 
 // POST /api/auth/refresh
 router.post('/refresh', refreshAccessToken);
+
+// POST /api/auth/logout
+router.post('/logout', authMiddleware, logout);
 
 router.get('/profile', authMiddleware, (req, res) => {
   res.json({ message: 'Authorized', userId: req.userId });

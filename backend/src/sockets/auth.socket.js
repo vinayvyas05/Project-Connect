@@ -9,10 +9,13 @@ export async function socketAuth(socket, next) {
       return next(new Error('No token provided'));
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token, 
+      process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET
+    );
 
-    // FIX: Use decoded.userId to match your auth.controller.js payload
-    const user = await User.findById(decoded.userId).select('_id email name');
+    // FIX: Use decoded.userId or decoded._id
+    const user = await User.findById(decoded.userId || decoded._id).select('_id email name');
 
     if (!user) {
       return next(new Error('User not found'));

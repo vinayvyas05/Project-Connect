@@ -18,7 +18,7 @@ export default function TeamSidebar({
   onCreateTeam,
 }) {
   return (
-    <nav className="w-18 flex flex-col items-center py-4 gap-4 shrink-0 bg-sidebar border-r border-gray-800 relative z-30 shadow-xl h-full">
+    <nav className="w-18 flex flex-col items-center py-4 gap-4 shrink-0 bg-sidebar border-r border-gray-200 relative z-30 shadow-xl h-full">
       {/* App logo */}
       <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center mb-2 shrink-0 shadow-lg shadow-primary/20">
         <svg
@@ -36,7 +36,7 @@ export default function TeamSidebar({
         </svg>
       </div>
 
-      <div className="w-8 h-px bg-white/10 mb-1" />
+      <div className="w-8 h-px bg-gray-200 mb-1" />
 
       {/* One button per team */}
       <div className="flex flex-col gap-3">
@@ -52,7 +52,7 @@ export default function TeamSidebar({
                 ${
                   activeTeamId === team._id
                     ? "bg-primary text-white shadow-xl shadow-primary/40 rounded-2xl scale-105"
-                    : "bg-white/5 text-gray-400 hover:bg-sidebar-hover hover:text-white hover:rounded-2xl hover:scale-110 rounded-xl border border-white/5"
+                    : "bg-white text-text-secondary hover:bg-sidebar-hover hover:text-text-primary hover:rounded-2xl hover:scale-110 rounded-xl border border-gray-200 shadow-sm"
                 }`}
             >
               {initials(team.name)}
@@ -64,7 +64,7 @@ export default function TeamSidebar({
         <button
           onClick={onCreateTeam}
           title="Create or join a team"
-          className="w-11 h-11 rounded-xl bg-white/5 text-gray-400 hover:bg-sidebar-hover hover:text-white hover:rounded-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center shrink-0 btn-press border border-white/5 shadow-inner"
+          className="w-11 h-11 rounded-xl bg-white text-text-secondary hover:bg-sidebar-hover hover:text-text-primary hover:rounded-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center shrink-0 btn-press border border-gray-200 shadow-sm"
         >
           <svg
             className="w-5 h-5"

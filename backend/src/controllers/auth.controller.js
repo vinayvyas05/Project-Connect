@@ -156,3 +156,20 @@ export const refreshAccessToken = async (req, res) => {
     return res.status(500).json({ message: 'Server error.' });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    user.refreshToken = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json({ message: 'Logout successful.' });
+  } catch (err) {
+    console.error('Logout error:', err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
