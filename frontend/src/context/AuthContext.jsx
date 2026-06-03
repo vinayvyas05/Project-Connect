@@ -18,10 +18,13 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
-  const login = (userData, jwtToken) => {
+  const login = (userData, jwtToken, refreshToken) => {
     setUser(userData);
     setToken(jwtToken);
     localStorage.setItem("token", jwtToken);
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    }
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
@@ -29,6 +32,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
   };
 

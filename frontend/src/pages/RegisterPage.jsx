@@ -25,7 +25,7 @@ export default function RegisterPage() {
     try {
       await authService.register(form.name, form.email, form.password);
       const { data } = await authService.login(form.email, form.password);
-      login(data.user, data.token);
+      login(data.user, data.token, data.refreshToken);
       navigate("/");
     } catch (err) {
       setError(
