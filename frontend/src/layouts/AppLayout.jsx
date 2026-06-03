@@ -46,26 +46,14 @@ function WelcomeState({
 
         <div className="relative z-10 flex flex-col items-center max-w-sm">
           {/* Icon */}
-          <div
-            className="w-20 h-20 rounded-3xl mb-6 flex items-center justify-center shadow-xl bg-primary"
-          >
-            <svg
-              className="w-10 h-10 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </div>
+          <img 
+            src="/kanvo.svg" 
+            alt="Kanvo Logo" 
+            className="w-20 h-20 mb-6 shrink-0 rounded-3xl shadow-xl"
+          />
 
           <h2 className="text-2xl font-bold text-text-primary mb-2">
-            Welcome to Project Connect
+            Welcome to Kanvo
           </h2>
           <p className="text-text-secondary text-sm leading-relaxed mb-8">
             Select a team from the left rail to get started, or create a new
