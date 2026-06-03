@@ -43,11 +43,7 @@ export default function RegisterPage() {
         <div className="w-full max-w-sm mx-auto">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-10">
-            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
+            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
             <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
           </div>
 

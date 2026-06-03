@@ -37,11 +37,7 @@ export default function LoginPage() {
       <div className="hidden lg:flex flex-col w-[60%] bg-surface border-r border-gray-200 relative">
         <div className="p-8 absolute top-0 left-0 w-full">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
+            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
             <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
           </div>
         </div>
@@ -64,12 +60,8 @@ export default function LoginPage() {
         <div className="w-full max-w-sm mx-auto">
           {/* Mobile Logo */}
           <div className="flex lg:hidden items-center gap-2 mb-10">
-            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <span className="font-semibold tracking-tight text-lg text-text-primary">Project Connect</span>
+            <img src="/devpulse.svg" alt="DevPulse Logo" className="w-8 h-8 rounded" />
+            <span className="font-semibold tracking-tight text-lg text-text-primary">DevPulse</span>
           </div>
 
           <h1 className="text-3xl font-semibold tracking-tight mb-2 text-text-primary">Welcome back</h1>

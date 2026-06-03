@@ -20,21 +20,11 @@ export default function TeamSidebar({
   return (
     <nav className="w-18 flex flex-col items-center py-4 gap-4 shrink-0 bg-sidebar border-r border-gray-200 relative z-30 shadow-xl h-full">
       {/* App logo */}
-      <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center mb-2 shrink-0 shadow-lg shadow-primary/20">
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2.5}
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          />
-        </svg>
-      </div>
+      <img 
+        src="/devpulse.svg" 
+        alt="DevPulse Logo" 
+        className="w-11 h-11 mb-2 shrink-0 rounded-2xl shadow-sm"
+      />
 
       <div className="w-8 h-px bg-gray-200 mb-1" />
 
