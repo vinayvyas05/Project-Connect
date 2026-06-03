@@ -20,7 +20,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const { data } = await authService.login(form.email, form.password);
-      login(data.user, data.accessToken || data.token, data.refreshToken);
+      login(data.user, data.token, data.refreshToken);
       navigate("/");
     } catch (err) {
       setError(

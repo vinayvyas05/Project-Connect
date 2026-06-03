@@ -23,26 +23,13 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
-  // Listen for background token refreshes from Axios interceptor
-  useEffect(() => {
-    setTokenRefreshedCallback((newToken) => {
-      setToken(newToken);
-    });
-    return () => {
-      setTokenRefreshedCallback(null);
-    };
-  }, []);
-
-  const login = (userData, jwtToken, refreshJwtToken) => {
+  const login = (userData, jwtToken, refreshToken) => {
     setUser(userData);
     setToken(jwtToken);
     localStorage.setItem("token", jwtToken);
-    
-    if (refreshJwtToken) {
-      setRefreshToken(refreshJwtToken);
-      localStorage.setItem("refreshToken", refreshJwtToken);
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
     }
-    
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
