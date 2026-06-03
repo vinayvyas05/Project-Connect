@@ -9,31 +9,31 @@ import EditTaskModal from "../components/tasks/EditTaskModal";
 // ─── Column ────────────────────────────────────────────────────────────────────
 
 const COLUMN_STYLES = {
-  todo: { dot: "bg-gray-500", header: "text-gray-400" },
-  in_progress: { dot: "bg-amber-400", header: "text-amber-400" },
-  done: { dot: "bg-emerald-400", header: "text-emerald-400" },
+  todo: { bg: "bg-kanban-todo", dot: "bg-gray-500", header: "text-gray-600" },
+  in_progress: { bg: "bg-kanban-progress", dot: "bg-blue-500", header: "text-blue-700" },
+  done: { bg: "bg-kanban-done", dot: "bg-emerald-500", header: "text-emerald-700" },
 };
 
 function Column({ status, tasks, onStatusChange, onEdit, onDelete }) {
   const style = COLUMN_STYLES[status];
   return (
-    <div className="flex flex-col min-h-0 flex-1">
+    <div className={`flex flex-col min-h-0 flex-1 rounded-2xl p-4 ${style.bg} border border-gray-200/50 shadow-sm`}>
       {/* Column header */}
-      <div className="flex items-center gap-2 mb-3 px-1">
+      <div className="flex items-center gap-2 mb-4 px-1">
         <span className={`w-2 h-2 rounded-full ${style.dot}`} />
         <span
           className={`text-xs font-semibold uppercase tracking-wider ${style.header}`}
         >
           {STATUS_LABEL[status]}
         </span>
-        <span className="text-xs text-gray-600 ml-auto">{tasks.length}</span>
+        <span className="text-xs text-gray-500 ml-auto bg-white/50 px-2 py-0.5 rounded-full font-medium">{tasks.length}</span>
       </div>
 
       {/* Cards */}
-      <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+      <div className="flex flex-col gap-3 overflow-y-auto pr-1 pb-2 scrollbar-thin">
         {tasks.length === 0 ? (
-          <div className="border border-dashed border-gray-800 rounded-xl py-8 flex items-center justify-center">
-            <p className="text-gray-600 text-xs">No tasks</p>
+          <div className="border border-dashed border-gray-300 rounded-xl py-8 flex items-center justify-center bg-white/40">
+            <p className="text-gray-500 text-xs font-medium">No tasks</p>
           </div>
         ) : (
           tasks.map((task) => (
@@ -104,49 +104,49 @@ export default function TaskBoardPage() {
   if (loading) {
     // ── Kanban skeleton — matches 3-column board layout ──────────────────────
     const COLS = [
-      { dot: "bg-gray-700", label: "w-10", cards: 2 },
-      { dot: "bg-amber-800", label: "w-20", cards: 3 },
-      { dot: "bg-emerald-900", label: "w-8", cards: 1 },
+      { dot: "bg-gray-400", label: "w-10", cards: 2, bg: "bg-kanban-todo" },
+      { dot: "bg-blue-400", label: "w-20", cards: 3, bg: "bg-kanban-progress" },
+      { dot: "bg-emerald-400", label: "w-8", cards: 1, bg: "bg-kanban-done" },
     ];
     return (
-      <div className="flex flex-col h-full overflow-hidden bg-gray-950">
+      <div className="flex flex-col h-full overflow-hidden bg-background">
         {/* Header skeleton */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0">
           <div className="space-y-2">
-            <div className="h-5 w-24 bg-gray-800 rounded-md animate-pulse" />
-            <div className="h-3 w-16 bg-gray-800 rounded-md animate-pulse" />
+            <div className="h-5 w-24 bg-gray-200 rounded-md animate-pulse" />
+            <div className="h-3 w-16 bg-gray-200 rounded-md animate-pulse" />
           </div>
-          <div className="h-9 w-24 bg-gray-800 rounded-lg animate-pulse" />
+          <div className="h-9 w-24 bg-gray-200 rounded-lg animate-pulse" />
         </div>
 
         {/* Columns */}
         <div className="flex-1 px-6 py-6 overflow-auto">
           <div className="flex gap-5 h-full min-w-[640px]">
             {COLS.map((col, ci) => (
-              <div key={ci} className="flex-1 flex flex-col gap-3">
+              <div key={ci} className={`flex-1 flex flex-col gap-3 rounded-2xl p-4 ${col.bg} border border-gray-200/50`}>
                 {/* Column header */}
                 <div className="flex items-center gap-2 px-1 mb-1">
                   <div
                     className={`w-2 h-2 rounded-full animate-pulse ${col.dot}`}
                   />
                   <div
-                    className={`h-2.5 ${col.label} bg-gray-800 rounded-md animate-pulse`}
+                    className={`h-2.5 ${col.label} bg-gray-300 rounded-md animate-pulse`}
                   />
                 </div>
                 {/* Card skeletons */}
                 {Array.from({ length: col.cards }).map((_, i) => (
                   <div
                     key={i}
-                    className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3 animate-pulse"
+                    className="bg-surface border border-gray-200 rounded-xl p-4 space-y-3 animate-pulse shadow-sm"
                   >
-                    <div className="h-3.5 w-4/5 bg-gray-800 rounded-md" />
+                    <div className="h-3.5 w-4/5 bg-gray-200 rounded-md" />
                     <div className="space-y-1.5">
-                      <div className="h-2.5 w-full bg-gray-800 rounded-md" />
-                      <div className="h-2.5 w-3/5 bg-gray-800 rounded-md" />
+                      <div className="h-2.5 w-full bg-gray-200 rounded-md" />
+                      <div className="h-2.5 w-3/5 bg-gray-200 rounded-md" />
                     </div>
                     <div className="flex items-center justify-between pt-1">
-                      <div className="h-5 w-16 bg-gray-800 rounded-full" />
-                      <div className="w-6 h-6 bg-gray-800 rounded-full" />
+                      <div className="h-5 w-16 bg-gray-200 rounded-full" />
+                      <div className="w-6 h-6 bg-gray-200 rounded-full" />
                     </div>
                   </div>
                 ))}
@@ -168,18 +168,18 @@ export default function TaskBoardPage() {
 
   return (
     <>
-      <div className="flex flex-col h-full overflow-hidden bg-gray-950 animate-page-in">
+      <div className="flex flex-col h-full overflow-hidden bg-background animate-page-in">
         {/* Page header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0 bg-surface">
           <div>
-            <h1 className="text-white font-bold text-lg">Task Board</h1>
-            <p className="text-gray-500 text-xs mt-0.5">
+            <h1 className="text-text-primary font-bold text-lg">Task Board</h1>
+            <p className="text-text-secondary text-xs mt-0.5">
               {todo.length + inProgress.length + done.length} tasks total
             </p>
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm"
           >
             <svg
               className="w-4 h-4"

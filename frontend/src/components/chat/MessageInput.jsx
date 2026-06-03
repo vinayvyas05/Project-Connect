@@ -29,7 +29,7 @@ export default function MessageInput({ onSend, channelName }) {
 
   return (
     <div className="px-6 pb-6 pt-2 select-none">
-      <div className="flex items-end gap-3 bg-white/[0.02] border border-white/[0.08] rounded-xl px-4 py-2.5 focus-within:border-indigo-500/50 focus-within:ring-2 focus-within:ring-indigo-500/10 focus-within:bg-white/[0.03] transition-all duration-200 shadow-lg">
+      <div className="flex items-end gap-3 bg-surface border border-gray-200 rounded-xl px-4 py-2.5 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 focus-within:bg-gray-50 transition-all duration-200 shadow-sm">
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -38,7 +38,7 @@ export default function MessageInput({ onSend, channelName }) {
           onKeyDown={handleKeyDown}
           rows={1}
           placeholder={`Message #${channelName ?? "channel"}`}
-          className="flex-1 bg-transparent text-slate-200 placeholder-slate-500 text-[14px] resize-none focus:outline-none py-1 leading-relaxed max-h-32 scrollbar-none font-normal"
+          className="flex-1 bg-transparent text-text-primary placeholder-gray-400 text-[14px] resize-none focus:outline-none py-1 leading-relaxed max-h-32 scrollbar-none font-normal"
           style={{ height: "36px" }}
         />
         {/* Send button */}
@@ -46,8 +46,8 @@ export default function MessageInput({ onSend, channelName }) {
           onClick={handleSend}
           disabled={!text.trim()}
           className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 btn-press
-            disabled:bg-white/[0.02] disabled:text-slate-600 disabled:cursor-not-allowed
-            enabled:bg-gradient-to-tr enabled:from-indigo-500 enabled:to-indigo-600 enabled:hover:from-indigo-600 enabled:hover:to-indigo-700 enabled:text-white enabled:shadow-md enabled:shadow-indigo-500/10"
+            disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
+            enabled:bg-primary enabled:hover:bg-primary-hover enabled:text-white enabled:shadow-sm"
         >
           <svg
             className="w-4 h-4 transform rotate-45 -translate-x-0.5 translate-y-0.5"
@@ -64,13 +64,13 @@ export default function MessageInput({ onSend, channelName }) {
           </svg>
         </button>
       </div>
-      <p className="text-slate-500/70 text-[11px] mt-2 pl-1 flex items-center gap-1">
+      <p className="text-text-secondary text-[11px] mt-2 pl-1 flex items-center gap-1">
         <span>Press</span>
-        <kbd className="text-slate-400 bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-[10px] font-mono">
+        <kbd className="text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-mono">
           Enter
         </kbd>
         <span>to send ·</span>
-        <kbd className="text-slate-400 bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5 rounded text-[10px] font-mono">
+        <kbd className="text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-mono">
           Shift + Enter
         </kbd>
         <span>for new line</span>

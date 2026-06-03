@@ -8,8 +8,8 @@ import InviteLinkModal from "../components/InviteLinkModal";
 
 function RoleBadge({ role }) {
   const styles = {
-    admin: "bg-indigo-600/20 text-indigo-300 border-indigo-500/30",
-    member: "bg-gray-700/50 text-gray-400 border-gray-600/50",
+    admin: "bg-primary/10 text-primary border-primary/20",
+    member: "bg-gray-100 text-text-secondary border-gray-200",
   };
   return (
     <span
@@ -41,20 +41,20 @@ function MemberRow({ member, isYou }) {
     .toUpperCase();
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800/50 transition-colors">
+    <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
       <div
-        className={`w-9 h-9 ${colour} rounded-full flex items-center justify-center text-sm font-semibold text-white shrink-0`}
+        className={`w-9 h-9 ${colour} rounded-full flex items-center justify-center text-sm font-semibold text-white shrink-0 shadow-sm`}
       >
         {initials}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-gray-200 truncate">
+          <p className="text-sm font-medium text-text-primary truncate">
             {person?.name}
           </p>
-          {isYou && <span className="text-xs text-gray-500">(you)</span>}
+          {isYou && <span className="text-xs text-text-secondary">(you)</span>}
         </div>
-        <p className="text-xs text-gray-500 truncate">{person?.email}</p>
+        <p className="text-xs text-text-secondary truncate">{person?.email}</p>
       </div>
       <RoleBadge role={member.role} />
     </div>
@@ -99,29 +99,29 @@ export default function MembersPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 overflow-y-auto bg-gray-950 px-6 py-8">
+      <div className="flex-1 overflow-y-auto bg-background px-6 py-8">
         {/* Header skeleton */}
         <div className="flex items-center justify-between mb-6 max-w-2xl mx-auto">
           <div className="space-y-2">
-            <div className="h-5 w-24 bg-gray-800 rounded-md animate-pulse" />
-            <div className="h-3 w-16 bg-gray-800 rounded-md animate-pulse" />
+            <div className="h-5 w-24 bg-gray-200 rounded-md animate-pulse" />
+            <div className="h-3 w-16 bg-gray-200 rounded-md animate-pulse" />
           </div>
-          <div className="h-9 w-20 bg-gray-800 rounded-lg animate-pulse" />
+          <div className="h-9 w-20 bg-gray-200 rounded-lg animate-pulse" />
         </div>
 
         {/* Member rows skeleton */}
-        <div className="max-w-2xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden divide-y divide-gray-800">
+        <div className="max-w-2xl mx-auto bg-surface border border-gray-200 rounded-2xl overflow-hidden divide-y divide-gray-100 shadow-sm">
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
               className="flex items-center gap-3 px-4 py-3 animate-pulse"
             >
-              <div className="w-9 h-9 bg-gray-800 rounded-full shrink-0" />
+              <div className="w-9 h-9 bg-gray-200 rounded-full shrink-0" />
               <div className="flex-1 space-y-2">
-                <div className="h-3 w-28 bg-gray-800 rounded-md" />
-                <div className="h-2.5 w-40 bg-gray-800 rounded-md" />
+                <div className="h-3 w-28 bg-gray-200 rounded-md" />
+                <div className="h-2.5 w-40 bg-gray-200 rounded-md" />
               </div>
-              <div className="h-5 w-14 bg-gray-800 rounded-full" />
+              <div className="h-5 w-14 bg-gray-200 rounded-full" />
             </div>
           ))}
         </div>
@@ -131,27 +131,27 @@ export default function MembersPage() {
 
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <p className="text-red-400 text-sm">{error}</p>
+      <div className="flex-1 flex items-center justify-center bg-background">
+        <p className="text-error text-sm">{error}</p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto bg-gray-950 px-6 py-8 animate-page-in">
+      <div className="flex-1 overflow-y-auto bg-background px-6 py-8 animate-page-in">
         {/* Page header */}
         <div className="flex items-center justify-between mb-6 max-w-2xl mx-auto">
           <div>
-            <h1 className="text-xl font-bold text-white">Members</h1>
-            <p className="text-gray-500 text-sm mt-0.5">
+            <h1 className="text-xl font-bold text-text-primary">Members</h1>
+            <p className="text-text-secondary text-sm mt-0.5">
               {members.length} member{members.length !== 1 ? "s" : ""}
             </p>
           </div>
           {isAdmin && (
             <button
               onClick={() => setShowInvite(true)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors btn-press"
+              className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm btn-press"
             >
               <svg
                 className="w-4 h-4"
@@ -172,13 +172,13 @@ export default function MembersPage() {
         </div>
 
         {/* Members list */}
-        <div className="max-w-2xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+        <div className="max-w-2xl mx-auto bg-surface border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
           {members.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center py-10">
+            <p className="text-text-secondary text-sm text-center py-10">
               No members found.
             </p>
           ) : (
-            <div className="divide-y divide-gray-800">
+            <div className="divide-y divide-gray-100">
               {members.map((m) => (
                 <MemberRow
                   key={m.userId?._id ?? m._id}

@@ -31,16 +31,16 @@ export default function ChannelPage({ channels = [], activeTeamId }) {
   console.log("[UI] Passing messages to MessageList, count:", messages.length);
 
   return (
-    <div className="flex flex-col h-full overflow-hidden animate-page-in relative z-10 bg-gradient-to-b from-slate-950/40 via-transparent to-transparent">
+    <div className="flex flex-col h-full overflow-hidden animate-page-in relative z-10 bg-background">
       {/* Channel header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-slate-900/10 backdrop-blur-md shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-surface shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/10 to-violet-500/10 flex items-center justify-center border border-indigo-500/20 shadow-inner">
-            <span className="text-indigo-400 font-semibold text-sm">#</span>
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+            <span className="text-primary font-semibold text-sm">#</span>
           </div>
           <div className="flex flex-col">
-            <h2 className="text-slate-100 font-semibold text-[15px] tracking-tight">{channelName}</h2>
-            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest leading-none mt-0.5">
+            <h2 className="text-text-primary font-semibold text-[15px] tracking-tight">{channelName}</h2>
+            <p className="text-[9px] text-text-secondary font-bold uppercase tracking-widest leading-none mt-0.5">
               General Discussion
             </p>
           </div>
