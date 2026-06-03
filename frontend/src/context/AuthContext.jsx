@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../api/auth/auth.service";
+import { setTokenRefreshedCallback } from "../api/axios";
 
 const AuthContext = createContext(null);
 
@@ -20,6 +21,16 @@ export function AuthProvider({ children }) {
       setUser(JSON.parse(savedUser));
     }
     setIsLoading(false);
+  }, []);
+
+  // Listen for background token refreshes from Axios interceptor
+  useEffect(() => {
+    setTokenRefreshedCallback((newToken) => {
+      setToken(newToken);
+    });
+    return () => {
+      setTokenRefreshedCallback(null);
+    };
   }, []);
 
   const login = (userData, jwtToken, refreshJwtToken) => {
